@@ -38,18 +38,22 @@ Here is an example of a **recursive** navigation item template using our `Walker
 ```
 
 ### Walk backward
-You can *reverse walk (aka *moon walking*) to display a page breadcrumbs for example:
+You can *reverse* walk (aka *moon walking*) to display a page breadcrumbs for example:
 
 ```twig
 {# page.html.twig #}
 
 {% macro walkBreadcrumbs(pageWalker) %}
-    {% if pageWalker.getParent %}
-        {% set pageWalker = pageWalker.getParent %}
-        <li class="breadcrumbs-item">
-            <a href="{{ path(pageWalker.item) }}">{{ pageWalker.item.title }}</a>
-        </li>
-        {{ _self.walkBreadcrumbs(pageWalker.parent) }}
+    {% if pageWalker.parent %}
+        {% set pageWalker = pageWalker.parent %}
+        {# Recursive magic here … #}
+        {{ _self.walkBreadcrumbs(pageWalker) }}
+        {# Call macro itself before displaying to keep ancestors first #}
+        {% if pageWalker.item is not Neutral %}
+            <li class="breadcrumbs-item">
+                <a href="{{ path(pageWalker.item) }}">{{ pageWalker.item.title }}</a>
+            </li>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
@@ -63,7 +67,7 @@ You can *reverse walk (aka *moon walking*) to display a page breadcrumbs for exa
      #}
     {% set pageWalker = walker.getWalkerAtItem(page) %}
     
-    {# Recursive magic here …#}
+    {# Recursive magic here … #}
     {{ _self.walkBreadcrumbs(pageWalker.getParent) }}
     
     <li class="breadcrumbs-item">{{ page.title }}</li>
