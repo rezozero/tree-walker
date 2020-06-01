@@ -1,0 +1,8 @@
+parameters:
+    excludes_analyse:
+        - */node_modules/*
+        - */bower_components/*
+        - */static/*
+    ignoreErrors:
+        - '#Doctrine\\Persistence\\ObjectRepository#'
+    reportUnmatchedIgnoredErrors: false

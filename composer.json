@@ -1,0 +1,27 @@
+{
+    "name": "rezozero/tree-walker",
+    "description": "Creates a configurable tree walker using different methods for each node based on its PHP class or interface",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ambroise Maupate",
+            "email": "ambroise@rezo-zero.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "doctrine/cache": "^1.10",
+        "jms/serializer": "^3.7",
+        "doctrine/collections": "^1.6"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.3",
+        "phpstan/phpstan": "^0.11.19"
+    },
+    "autoload": {
+        "psr-4": {
+            "RZ\\TreeWalker\\": "src/"
+        }
+    }
+}
