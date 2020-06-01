@@ -31,10 +31,10 @@ Here is an example of a **recursive** navigation item template using our `Walker
 
 ## Configure your Walker
 
-1. Create a `WalkerContextInterface` instance to hold every service your `\Closure` definitions will use to fetch each tree node children. For example: a *Doctrine repository*, a *QueryBuilder*, even your *PDO* instance.
+1. Create a `WalkerContextInterface` instance to hold every service your `callable` definitions will use to fetch each tree node children. For example: a *Doctrine repository*, a *QueryBuilder*, even your *PDO* instance.
 2. Create a custom *Walker* class **extending** `AbstractWalker`.   
 You’ll notice that `AbstractWalker` is very strict and prevents overriding its *constructor* in order to abstract all `WalkerInterface` instantiations from your business logic. **All your custom logic must be included in `definitions` and `countDefinitions`.**
-3. Add `definitions` and `countDefinitions` from your custom *Walker*. A *definition* `\Closure` must return an `array` (or an *iterable* object) of your items. A *countDefinition* `\Closure` must return an `int` representing your items number. *CountDefinitions* are optional: `AbstractWalker::count()` method will fallback on using `AbstractWalker::getChildren()->count()`.
+3. Add `definitions` and `countDefinitions` from your custom *Walker*. A *definition* `callable` must return an `array` (or an *iterable* object) of your items. A *countDefinition* `callable` must return an `int` representing your items number. *CountDefinitions* are optional: `AbstractWalker::count()` method will fallback on using `AbstractWalker::getChildren()->count()`.
 4. Instantiate your custom Walker with your root item and your context object
 
 Here is some pseudo PHP code example:
@@ -44,6 +44,7 @@ Here is some pseudo PHP code example:
 use RZ\TreeWalker\WalkerInterface;
 use RZ\TreeWalker\WalkerContextInterface;
 use RZ\TreeWalker\AbstractWalker;
+use RZ\TreeWalker\Definition\ContextualDefinitionTrait;
 
 class Dummy
 {
@@ -93,7 +94,22 @@ class DummyWalkerContext implements WalkerContextInterface
     }
 }
 
-class DummyWalker extends AbstractWalker
+final class DummyChildrenDefinition
+{
+    use ContextualDefinitionTrait;
+
+    public function __invoke(Dummy $dummy){
+        if ($this->context instanceof DummyWalkerContext) {
+            return array_merge(
+                $this->context->getDummyRepository()->findByParentDummyId($dummy->getId()),
+                $this->context->getNotADummyRepository()->findByParentDummyId($dummy->getId())
+            );
+        }
+        throw new \InvalidArgumentException('Context should be instance of ' . DummyWalkerContext::class);
+    }
+}
+
+final class DummyWalker extends AbstractWalker
 {
     protected function initializeDefinitions()
     {
@@ -102,16 +118,7 @@ class DummyWalker extends AbstractWalker
          * You are free to code any logic to fetch your item children, and
          * to alter it given your WalkerContextInterface such as security, request…
          */
-        $this->addDefinition(Dummy::class, function (Dummy $dummy) {
-            $context = $this->getContext();
-            if ($context instanceof DummyWalkerContext) {
-                return array_merge(
-                    $context->getDummyRepository()->findByParentDummyId($dummy->getId()),
-                    $context->getNotADummyRepository()->findByParentDummyId($dummy->getId())
-                );
-            }
-            throw new \InvalidArgumentException('Context should be instance of ' . DummyWalkerContext::class);
-        });
+        $this->addDefinition(Dummy::class, new DummyChildrenDefinition($this->getContext()));
     }
 }
 

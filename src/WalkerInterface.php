@@ -10,32 +10,32 @@ interface WalkerInterface extends \IteratorAggregate, \Countable
     /**
      * @param mixed $item
      *
-     * @return \Closure
+     * @return callable
      */
-    public function getDefinitionForItem($item): \Closure;
+    public function getDefinitionForItem($item): callable;
 
     /**
      * @param string   $classname
-     * @param \Closure $definition
+     * @param callable $definition
      *
      * @return WalkerInterface
      */
-    public function addDefinition(string $classname, \Closure $definition): WalkerInterface;
+    public function addDefinition(string $classname, callable $definition): WalkerInterface;
 
     /**
      * @param string   $classname
-     * @param \Closure $countDefinition
+     * @param callable $countDefinition
      *
      * @return WalkerInterface
      */
-    public function addCountDefinition(string $classname, \Closure $countDefinition): WalkerInterface;
+    public function addCountDefinition(string $classname, callable $countDefinition): WalkerInterface;
 
     /**
      * @param mixed $item
      *
-     * @return \Closure|null
+     * @return callable|null
      */
-    public function getCountDefinitionForItem($item): ?\Closure;
+    public function getCountDefinitionForItem($item): ?callable;
 
     /**
      * @return WalkerInterface

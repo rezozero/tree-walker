@@ -39,12 +39,12 @@ abstract class AbstractWalker implements WalkerInterface
      */
     private $count = null;
     /**
-     * @var array
+     * @var array<callable>
      * @Serializer\Exclude()
      */
     private $definitions = [];
     /**
-     * @var array
+     * @var array<callable>
      * @Serializer\Exclude()
      */
     private $countDefinitions = [];
@@ -112,10 +112,7 @@ abstract class AbstractWalker implements WalkerInterface
         $this->initializeDefinitions();
     }
 
-    protected function initializeDefinitions()
-    {
-        // do nothing
-    }
+    abstract protected function initializeDefinitions();
 
     /**
      * @param mixed                       $item
@@ -222,7 +219,7 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @inheritDoc
      */
-    public function addDefinition(string $classname, \Closure $definition): WalkerInterface
+    public function addDefinition(string $classname, callable $definition): WalkerInterface
     {
         $this->definitions[$classname] = $definition;
 
@@ -232,7 +229,7 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @inheritDoc
      */
-    public function addCountDefinition(string $classname, \Closure $countDefinition): WalkerInterface
+    public function addCountDefinition(string $classname, callable $countDefinition): WalkerInterface
     {
         $this->countDefinitions[$classname] = $countDefinition;
 
@@ -265,7 +262,7 @@ abstract class AbstractWalker implements WalkerInterface
             if ($this->level < $this->maxLevel) {
                 $callable = $this->getCountDefinitionForItem($this->item);
                 if (null !== $callable) {
-                    $this->count = $callable->call($this, $this->item);
+                    $this->count = $callable($this->item);
                 } else {
                     $this->count = $this->getChildren()->count();
                 }
@@ -281,7 +278,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @inheritDoc
      * @throws \ReflectionException
      */
-    public function getCountDefinitionForItem($item): ?\Closure
+    public function getCountDefinitionForItem($item): ?callable
     {
         $classList = $this->getItemClassesList($item);
 
@@ -340,7 +337,7 @@ abstract class AbstractWalker implements WalkerInterface
             try {
                 if ($this->level < $this->maxLevel) {
                     $callable = $this->getDefinitionForItem($this->item);
-                    $this->children = (new ArrayCollection($callable->call($this, $this->item)))->map(function ($item) {
+                    $this->children = (new ArrayCollection($callable($this->item)))->map(function ($item) {
                         return new static(
                             $this->getRoot() ?? $this,
                             $this->definitions,
@@ -366,7 +363,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @inheritDoc
      * @throws \ReflectionException
      */
-    public function getDefinitionForItem($item): \Closure
+    public function getDefinitionForItem($item): callable
     {
         $classList = $this->getItemClassesList($item);
 
