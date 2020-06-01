@@ -8,25 +8,66 @@
 
 ## Usage in Twig
 
+### Walk forward
 Here is an example of a **recursive** navigation item template using our `WalkerInterface`:
 ```twig
 {# nav-item.html.twig #}
 <li class="nav-item">
     <span>{{ item.title }}</span>
+    {# 
+     # Walker object must be your general navigation WalkerInterface 
+     # and current page must be inside navigation graph.
+     #
+     # getWalkerAtItem method looks for current page in your Walker
+     # and returns walker interface for current page.
+     #}
     {# Always a good idea to check walker item count before going further #}
     {% if walker and walker|length %}
         <div class="dropdown-menu nav-children">
             <ul role="menu">
-                {% for walkerNode in walker %}
+                {% for subWalker in walker %}
                     {% include 'nav-item.html.twig' with {
-                        'walker': walkerNode,
-                        'item' : walkerNode.item,
+                        'walker': subWalker,
+                        'item' : subWalker.item,
                     } only %}
                 {% endfor %}
             </ul>
         </div>
     {% endif %}
 </li>
+```
+
+### Walk backward
+You can *reverse walk (aka *moon walking*) to display a page breadcrumbs for example:
+
+```twig
+{# page.html.twig #}
+
+{% macro walkBreadcrumbs(pageWalker) %}
+    {% if pageWalker.getParent %}
+        {% set pageWalker = pageWalker.getParent %}
+        <li class="breadcrumbs-item">
+            <a href="{{ path(pageWalker.item) }}">{{ pageWalker.item.title }}</a>
+        </li>
+        {{ _self.walkBreadcrumbs(pageWalker.parent) }}
+    {% endif %}
+{% endmacro %}
+
+<ul class="breadcrumbs">
+    {# 
+     # walker object must be your general navigation WalkerInterface 
+     # and current page must be inside navigation graph.
+     #
+     # getWalkerAtItem method looks for current page in your Walker
+     # and returns walker interface for current page.
+     #}
+    {% set pageWalker = walker.getWalkerAtItem(page) %}
+    
+    {# Recursive magic here …#}
+    {{ _self.walkBreadcrumbs(pageWalker.getParent) }}
+    
+    <li class="breadcrumbs-item">{{ page.title }}</li>
+</ul>
 ```
 
 ## Configure your Walker
@@ -159,3 +200,14 @@ $walker = DummyWalker::build(
 
 everyDummySayHello($walker);
 ```
+
+## Serialization groups
+
+Any walker interface can be serialized with *jms/serializer* since they extends `AbstractWalker` class.
+You should add serialization groups to ensure you do not fall into an infinite loop:
+
+- `walker`: serializes flat members with no recursivity
+- `children`: triggers walker children serialization until max level is reached.
+- `parent`: triggers reverse walker parents serialization until root is reached.
+
+Obviously, **do not use** `children` and `parent` groups at the same time…

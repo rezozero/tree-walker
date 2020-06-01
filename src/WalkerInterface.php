@@ -43,9 +43,19 @@ interface WalkerInterface extends \IteratorAggregate, \Countable
     public function getRoot(): WalkerInterface;
 
     /**
+     * @return bool
+     */
+    public function isRoot(): bool;
+
+    /**
      * @return Collection
      */
     public function getChildren(): Collection;
+
+    /**
+     * @return WalkerInterface|null Return parent walker or null if this is root walker.
+     */
+    public function getParent(): ?WalkerInterface;
 
     /**
      * @return mixed

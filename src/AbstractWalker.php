@@ -59,6 +59,11 @@ abstract class AbstractWalker implements WalkerInterface
      */
     private $item;
     /**
+     * @var WalkerInterface|null
+     * @Serializer\Groups({"parent"})
+     */
+    private $parent;
+    /**
      * @var WalkerContextInterface
      * @Serializer\Exclude()
      */
@@ -68,9 +73,9 @@ abstract class AbstractWalker implements WalkerInterface
      * @Serializer\Groups({"walker"})
      */
     private $level;
-
     /**
      * @var int|float
+     * @Serializer\Groups({"walker"})
      */
     private $maxLevel = \INF;
 
@@ -78,6 +83,7 @@ abstract class AbstractWalker implements WalkerInterface
      * AbstractWalker constructor.
      *
      * @param WalkerInterface|null   $root
+     * @param WalkerInterface|null   $parent
      * @param array                  $definitions
      * @param array                  $countDefinitions
      * @param mixed                  $item
@@ -88,6 +94,7 @@ abstract class AbstractWalker implements WalkerInterface
      */
     final protected function __construct(
         ?WalkerInterface $root,
+        ?WalkerInterface $parent,
         array &$definitions,
         array &$countDefinitions,
         $item,
@@ -103,6 +110,7 @@ abstract class AbstractWalker implements WalkerInterface
         } else {
             $this->root = $root;
         }
+        $this->parent = $parent;
         $this->item = $item;
         $this->context = $context;
         $this->level = $level;
@@ -133,6 +141,7 @@ abstract class AbstractWalker implements WalkerInterface
 
         return new static(
             null,
+            null,
             $definitions,
             $countDefinitions,
             $item,
@@ -162,6 +171,14 @@ abstract class AbstractWalker implements WalkerInterface
     public function getRoot(): WalkerInterface
     {
         return $this->root;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isRoot(): bool
+    {
+        return $this === $this->getRoot();
     }
 
     /**
@@ -339,7 +356,8 @@ abstract class AbstractWalker implements WalkerInterface
                     $callable = $this->getDefinitionForItem($this->item);
                     $this->children = (new ArrayCollection($callable($this->item)))->map(function ($item) {
                         return new static(
-                            $this->getRoot() ?? $this,
+                            $this->getRoot(),
+                            $this,
                             $this->definitions,
                             $this->countDefinitions,
                             $item,
@@ -357,6 +375,14 @@ abstract class AbstractWalker implements WalkerInterface
         }
 
         return $this->children;
+    }
+
+    /**
+     * @return WalkerInterface|null
+     */
+    public function getParent(): ?WalkerInterface
+    {
+        return $this->parent;
     }
 
     /**
