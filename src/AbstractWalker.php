@@ -363,7 +363,8 @@ abstract class AbstractWalker implements WalkerInterface
                             $item,
                             $this->context,
                             $this->cacheProvider,
-                            $this->level + 1
+                            $this->level + 1,
+                            $this->maxLevel
                         );
                     });
                 } else {
