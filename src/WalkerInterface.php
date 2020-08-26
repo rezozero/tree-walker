@@ -58,6 +58,16 @@ interface WalkerInterface extends \IteratorAggregate, \Countable
     public function getParent(): ?WalkerInterface;
 
     /**
+     * @return WalkerInterface|null Return next walker in parent or null if this is root walker or the last item.
+     */
+    public function getNext(): ?WalkerInterface;
+
+    /**
+     * @return WalkerInterface|null Return previous walker in parent or null if this is root walker or the first item.
+     */
+    public function getPrevious(): ?WalkerInterface;
+
+    /**
      * @return mixed
      */
     public function getItem();

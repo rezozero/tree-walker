@@ -380,6 +380,55 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
+     * @return WalkerInterface|null
+     */
+    public function getNext(): ?WalkerInterface
+    {
+        if (null !== $this->getParent()) {
+            /**
+             * @var int $key
+             * @var WalkerInterface $sibling
+             */
+            foreach ($this->getParent()->getChildren() as $key => $sibling) {
+                if ($this->isItemEqualsTo($sibling->getItem())) {
+                    return $this->getParent()->getChildren()->get($key + 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return WalkerInterface|null
+     */
+    public function getPrevious(): ?WalkerInterface
+    {
+        if (null !== $this->getParent()) {
+            /**
+             * @var int $key
+             * @var WalkerInterface $sibling
+             */
+            foreach ($this->getParent()->getChildren() as $key => $sibling) {
+                if ($this->isItemEqualsTo($sibling->getItem())) {
+                    return $this->getParent()->getChildren()->get($key - 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param mixed $item
+     *
+     * @return bool
+     */
+    protected function isItemEqualsTo($item): bool
+    {
+        return get_class($this->getItem()) === get_class($item) &&
+            $this->getItem() === $item;
+    }
+
+    /**
      * @inheritDoc
      * @throws \ReflectionException
      */
