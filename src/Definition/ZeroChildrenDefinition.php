@@ -12,6 +12,9 @@ final class ZeroChildrenDefinition
 {
     use ContextualDefinitionTrait;
 
+    /**
+     * @return array
+     */
     public function __invoke()
     {
         return [];

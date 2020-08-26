@@ -120,6 +120,9 @@ abstract class AbstractWalker implements WalkerInterface
         $this->initializeDefinitions();
     }
 
+    /**
+     * @return void
+     */
     abstract protected function initializeDefinitions();
 
     /**
@@ -157,12 +160,7 @@ abstract class AbstractWalker implements WalkerInterface
      */
     public function getWalkerAtItem($item): ?WalkerInterface
     {
-        $root = $this->getRoot();
-        if (null !== $root) {
-            return $this->doRecursiveFindWalkerForItem($root, $item);
-        }
-
-        return null;
+        return $this->doRecursiveFindWalkerForItem($this->getRoot(), $item);
     }
 
     /**
@@ -206,12 +204,7 @@ abstract class AbstractWalker implements WalkerInterface
      */
     public function getWalkersOfType(string $classname): array
     {
-        $root = $this->getRoot();
-        if (null !== $root) {
-            return $this->doRecursiveFindWalkersOfType($root, $classname);
-        }
-
-        return [];
+        return $this->doRecursiveFindWalkersOfType($this->getRoot(), $classname);
     }
 
     /**
@@ -409,5 +402,13 @@ abstract class AbstractWalker implements WalkerInterface
     public function getContext(): WalkerContextInterface
     {
         return $this->context;
+    }
+
+    /**
+     * @return int|float
+     */
+    public function getCurrentLevel()
+    {
+        return $this->level;
     }
 }

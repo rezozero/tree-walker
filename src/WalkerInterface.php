@@ -79,4 +79,9 @@ interface WalkerInterface extends \IteratorAggregate, \Countable
      * @return array containing all found walkers for this classname. Array wil be empty if not found
      */
     public function getWalkersOfType(string $classname): array;
+
+    /**
+     * @return int|float
+     */
+    public function getCurrentLevel();
 }

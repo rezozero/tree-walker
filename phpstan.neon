@@ -6,3 +6,6 @@ parameters:
     ignoreErrors:
         - '#Doctrine\\Persistence\\ObjectRepository#'
     reportUnmatchedIgnoredErrors: false
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+
