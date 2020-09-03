@@ -5,7 +5,7 @@ namespace RZ\TreeWalker;
 
 use Doctrine\Common\Collections\Collection;
 
-interface WalkerInterface extends \IteratorAggregate, \Countable
+interface WalkerInterface extends \IteratorAggregate, \Countable, \ArrayAccess
 {
     /**
      * @param mixed $item
@@ -66,6 +66,11 @@ interface WalkerInterface extends \IteratorAggregate, \Countable
      * @return WalkerInterface|null Return previous walker in parent or null if this is root walker or the first item.
      */
     public function getPrevious(): ?WalkerInterface;
+
+    /**
+     * @return int|null Return walker index in parent or null if this is root walker.
+     */
+    public function getIndex(): ?int;
 
     /**
      * @return mixed

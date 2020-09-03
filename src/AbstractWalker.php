@@ -264,6 +264,51 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @inheritDoc
+     * @param mixed $offset
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function offsetExists($offset)
+    {
+        return $this->getChildren()->offsetExists($offset);
+    }
+
+    /**
+     * @inheritDoc
+     * @param mixed $offset
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function offsetGet($offset)
+    {
+        return $this->getChildren()->offsetGet($offset);
+    }
+
+    /**
+     * @inheritDoc
+     * @param mixed $offset
+     * @param mixed $value
+     * @throws \RuntimeException
+     * @deprecated WalkerInterface has read-only children.
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new \RuntimeException('WalkerInterface has read-only children.');
+    }
+
+    /**
+     * @inheritDoc
+     * @param mixed $offset
+     * @throws \RuntimeException
+     * @deprecated WalkerInterface has read-only children.
+     */
+    public function offsetUnset($offset)
+    {
+        throw new \RuntimeException('WalkerInterface has read-only children.');
+    }
+
+    /**
+     * @inheritDoc
      * @throws \ReflectionException
      */
     public function count()
@@ -377,6 +422,25 @@ abstract class AbstractWalker implements WalkerInterface
     public function getParent(): ?WalkerInterface
     {
         return $this->parent;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getIndex(): ?int
+    {
+        if (null !== $this->getParent()) {
+            /**
+             * @var int $key
+             * @var WalkerInterface $sibling
+             */
+            foreach ($this->getParent()->getChildren() as $key => $sibling) {
+                if ($this->isItemEqualsTo($sibling->getItem())) {
+                    return (int) $key;
+                }
+            }
+        }
+        return null;
     }
 
     /**
