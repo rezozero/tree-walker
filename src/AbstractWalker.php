@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
-use RZ\TreeWalker\Exception\WalkerMetadataNotFound;
 
 /**
  * Class AbstractWalker
@@ -551,14 +550,15 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @param string $key
+     * @param mixed $default
      * @return mixed
      */
-    public function getMetadata(string $key)
+    public function getMetadata(string $key, $default = null)
     {
         if (null !== $this->metadata && array_key_exists($key, $this->metadata)) {
             return $this->metadata[$key];
         }
-        throw new WalkerMetadataNotFound($key . ' metadata does not exist');
+        return $default;
     }
 
     /**

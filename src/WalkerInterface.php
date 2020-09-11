@@ -109,9 +109,10 @@ interface WalkerInterface extends \IteratorAggregate, \Countable, \ArrayAccess
 
     /**
      * @param string $key
+     * @param mixed $default
      * @return mixed
      */
-    public function getMetadata(string $key);
+    public function getMetadata(string $key, $default = null);
 
     /**
      * @return array
