@@ -99,4 +99,22 @@ interface WalkerInterface extends \IteratorAggregate, \Countable, \ArrayAccess
      * @return int|float
      */
     public function getCurrentLevel();
+
+    /**
+     * @param string $key
+     * @param mixed $data
+     * @return WalkerInterface
+     */
+    public function addMetadata(string $key, $data);
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getMetadata(string $key);
+
+    /**
+     * @return array
+     */
+    public function getAllMetadata(): array;
 }

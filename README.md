@@ -143,7 +143,7 @@ final class DummyChildrenDefinition
 {
     use ContextualDefinitionTrait;
 
-    public function __invoke(Dummy $dummy){
+    public function __invoke(Dummy $dummy, WalkerInterface $walker){
         if ($this->context instanceof DummyWalkerContext) {
             return array_merge(
                 $this->context->getDummyRepository()->findByParentDummyId($dummy->getId()),

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
+use RZ\TreeWalker\Exception\WalkerMetadataNotFound;
 
 /**
  * Class AbstractWalker
@@ -78,6 +79,11 @@ abstract class AbstractWalker implements WalkerInterface
      * @Serializer\Groups({"walker"})
      */
     private $maxLevel = \INF;
+    /**
+     * @var array|null
+     * @Serializer\Groups({"walker_metadata"})
+     */
+    private $metadata;
 
     /**
      * AbstractWalker constructor.
@@ -392,7 +398,11 @@ abstract class AbstractWalker implements WalkerInterface
             try {
                 if ($this->level < $this->maxLevel) {
                     $callable = $this->getDefinitionForItem($this->item);
-                    $this->children = (new ArrayCollection($callable($this->item)))->map(function ($item) {
+                    /*
+                     * Call invokable definition with current item and current Walker
+                     * if you need to add metadata to your Walker after fetching its children.
+                     */
+                    $this->children = (new ArrayCollection($callable($this->item, $this)))->map(function ($item) {
                         return new static(
                             $this->getRoot(),
                             $this,
@@ -523,5 +533,39 @@ abstract class AbstractWalker implements WalkerInterface
     public function getCurrentLevel()
     {
         return $this->level;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $data
+     * @return $this|WalkerInterface
+     */
+    public function addMetadata(string $key, $data)
+    {
+        if (null === $this->metadata) {
+            $this->metadata = [];
+        }
+        $this->metadata[$key] = $data;
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getMetadata(string $key)
+    {
+        if (null !== $this->metadata && array_key_exists($key, $this->metadata)) {
+            return $this->metadata[$key];
+        }
+        throw new WalkerMetadataNotFound($key . ' metadata does not exist');
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllMetadata(): array
+    {
+        return $this->metadata ?? [];
     }
 }
