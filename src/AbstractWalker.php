@@ -401,11 +401,14 @@ abstract class AbstractWalker implements WalkerInterface
             try {
                 if ($this->level < $this->maxLevel) {
                     $callable = $this->getDefinitionForItem($this->item);
+                    $collection = (new ArrayCollection($callable($this->item, $this)))->filter(function ($item) {
+                        return null !== $item;
+                    });
                     /*
                      * Call invokable definition with current item and current Walker
                      * if you need to add metadata to your Walker after fetching its children.
                      */
-                    $this->children = (new ArrayCollection($callable($this->item, $this)))->map(function ($item) {
+                    $this->children = $collection->map(function ($item) {
                         return new static(
                             $this->getRoot(),
                             $this,
@@ -511,6 +514,10 @@ abstract class AbstractWalker implements WalkerInterface
      */
     public function getDefinitionForItem($item): callable
     {
+        if (null === $item) {
+            throw new WalkerDefinitionNotFound('Cannot walk a NULL item.');
+        }
+
         $classList = $this->getItemClassesList($item);
 
         foreach ($classList as $className) {
