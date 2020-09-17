@@ -359,6 +359,10 @@ abstract class AbstractWalker implements WalkerInterface
      */
     protected function getItemClassesList($item): array
     {
+        if (null === $item) {
+            return [];
+        }
+
         $itemId = static::class . '_' . get_class($item);
 
         if (!$this->getCacheProvider()->contains($itemId)) {
