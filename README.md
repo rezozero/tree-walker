@@ -210,8 +210,11 @@ everyDummySayHello($walker);
 Any walker interface can be serialized with *jms/serializer* since they extends `AbstractWalker` class.
 You should add serialization groups to ensure you do not fall into an infinite loop:
 
-- `walker`: serializes flat members with no recursivity
+- `walker`: serializes flat members with no recursion
 - `children`: triggers walker children serialization until max level is reached.
+- `children_count`: serializes children count if your application can count children array.
 - `parent`: triggers reverse walker parents serialization until root is reached.
+- `walker_level`: serializes maximum and current level information.
+- `walker_metadata`: serializes current level user metadata.
 
 Obviously, **do not use** `children` and `parent` groups at the same time…

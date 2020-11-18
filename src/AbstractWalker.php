@@ -32,7 +32,7 @@ abstract class AbstractWalker implements WalkerInterface
     private $children = null;
     /**
      * @var int|null
-     * @Serializer\Groups({"walker"})
+     * @Serializer\Groups({"children_count"})
      * @Serializer\AccessType("public_method")
      * @Serializer\Accessor(getter="count")
      * @Serializer\SerializedName("childrenCount")
@@ -70,12 +70,12 @@ abstract class AbstractWalker implements WalkerInterface
     private $context;
     /**
      * @var int|float
-     * @Serializer\Groups({"walker"})
+     * @Serializer\Groups({"walker_level"})
      */
     private $level;
     /**
      * @var int|float
-     * @Serializer\Groups({"walker"})
+     * @Serializer\Groups({"walker_level"})
      */
     private $maxLevel = \INF;
     /**
