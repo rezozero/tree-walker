@@ -11,8 +11,6 @@ use JMS\Serializer\Annotation as Serializer;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
 
 /**
- * Class AbstractWalker
- *
  * @package RZ\TreeWalker
  * @Serializer\ReadOnly
  */
@@ -192,7 +190,7 @@ abstract class AbstractWalker implements WalkerInterface
      */
     private function doRecursiveFindWalkerForItem(WalkerInterface $current, &$item): ?WalkerInterface
     {
-        if ($current->getItem() === $item) {
+        if ($current->isItemEqualsTo($item)) {
             return $current;
         }
         foreach ($current as $walker) {
@@ -502,7 +500,7 @@ abstract class AbstractWalker implements WalkerInterface
      *
      * @return bool
      */
-    protected function isItemEqualsTo($item): bool
+    public function isItemEqualsTo($item): bool
     {
         return get_class($this->getItem()) === get_class($item) &&
             $this->getItem() === $item;

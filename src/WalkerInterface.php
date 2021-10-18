@@ -118,4 +118,16 @@ interface WalkerInterface extends \IteratorAggregate, \Countable, \ArrayAccess
      * @return array
      */
     public function getAllMetadata(): array;
+
+    /**
+     * Perform a custom equality check between current walker item and
+     * another object instead of comparing objects memory ID.
+     *
+     * For example, to compare two Doctrine objects with same ID but not the
+     * same in memory.
+     *
+     * @param mixed $item
+     * @return bool
+     */
+    public function isItemEqualsTo($item): bool;
 }
