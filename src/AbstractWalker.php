@@ -83,8 +83,6 @@ abstract class AbstractWalker implements WalkerInterface
     private $metadata;
 
     /**
-     * AbstractWalker constructor.
-     *
      * @param WalkerInterface|null   $root
      * @param WalkerInterface|null   $parent
      * @param array                  $definitions
@@ -376,6 +374,7 @@ abstract class AbstractWalker implements WalkerInterface
             } while (false !== $class);
 
             $this->getCacheProvider()->save($itemId, $classList);
+            return $classList;
         }
 
         return $this->getCacheProvider()->fetch($itemId);
