@@ -372,7 +372,11 @@ abstract class AbstractWalker implements WalkerInterface
             return [];
         }
 
-        $itemId = static::class . '_' . get_class($item);
+        $itemId = str_replace(
+            ['{', '}', '(', ')', '/', '\\', '@', ':', '"'],
+            '-',
+            static::class . '_' . get_class($item)
+        );
         $cacheItem = $this->getCacheProvider()->getItem($itemId);
 
         if (!$cacheItem->isHit()) {
