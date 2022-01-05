@@ -1,86 +1,100 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RZ\TreeWalker;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Serializer\Annotation as SymfonySerializer;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
 
 /**
  * @package RZ\TreeWalker
- * @Serializer\ReadOnly
  */
 abstract class AbstractWalker implements WalkerInterface
 {
     /**
-     * @var CacheProvider
+     * @var CacheItemPoolInterface
      * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
-    protected $cacheProvider;
+    protected CacheItemPoolInterface $cacheProvider;
     /**
      * @var Collection|null
      * @Serializer\Groups({"children"})
+     * @SymfonySerializer\Groups({"children"})
      * @Serializer\Accessor(getter="getChildren")
      * @Serializer\AccessType("public_method")
      */
-    private $children = null;
+    private ?Collection $children = null;
     /**
      * @var int|null
      * @Serializer\Groups({"children_count"})
+     * @SymfonySerializer\Groups({"children_count"})
      * @Serializer\AccessType("public_method")
      * @Serializer\Accessor(getter="count")
      * @Serializer\SerializedName("childrenCount")
+     * @SymfonySerializer\SerializedName({"childrenCount"})
      */
-    private $count = null;
+    private ?int $count = null;
     /**
      * @var array<callable>
      * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
-    private $definitions = [];
+    private array $definitions = [];
     /**
      * @var array<callable>
      * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
-    private $countDefinitions = [];
+    private array $countDefinitions = [];
     /**
      * @var WalkerInterface
      * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
-    private $root;
+    private WalkerInterface $root;
     /**
      * @var mixed
      * @Serializer\Groups({"walker"})
+     * @SymfonySerializer\Groups({"walker"})
      */
     private $item;
     /**
      * @var WalkerInterface|null
      * @Serializer\Groups({"parent"})
+     * @SymfonySerializer\Groups({"parent"})
      */
-    private $parent;
+    private ?WalkerInterface $parent = null;
     /**
      * @var WalkerContextInterface
      * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
-    private $context;
+    private WalkerContextInterface $context;
     /**
      * @var int|float
      * @Serializer\Groups({"walker_level"})
+     * @SymfonySerializer\Groups({"walker_level"})
      */
     private $level;
     /**
      * @var int|float
      * @Serializer\Groups({"walker_level"})
+     * @SymfonySerializer\Groups({"walker_level"})
      */
     private $maxLevel = \INF;
     /**
      * @var array|null
      * @Serializer\Groups({"walker_metadata"})
+     * @SymfonySerializer\Groups({"walker_metadata"})
      */
-    private $metadata;
+    private ?array $metadata = null;
 
     /**
      * @param WalkerInterface|null   $root
@@ -89,7 +103,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @param array                  $countDefinitions
      * @param mixed                  $item
      * @param WalkerContextInterface $context
-     * @param CacheProvider          $cacheProvider
+     * @param CacheItemPoolInterface $cacheProvider
      * @param int|float              $level
      * @param int|float              $maxLevel
      */
@@ -100,7 +114,7 @@ abstract class AbstractWalker implements WalkerInterface
         array &$countDefinitions,
         $item,
         WalkerContextInterface $context,
-        CacheProvider $cacheProvider,
+        CacheItemPoolInterface $cacheProvider,
         $level = 0,
         $maxLevel = \INF
     ) {
@@ -130,15 +144,15 @@ abstract class AbstractWalker implements WalkerInterface
      * @param mixed                       $item
      * @param WalkerContextInterface|null $context
      * @param int|float                   $maxLevel
-     * @param CacheProvider|null          $cacheProvider
+     * @param CacheItemPoolInterface|null $cacheProvider
      *
      * @return WalkerInterface
      */
     public static function build(
         $item,
-        WalkerContextInterface $context = null,
+        ?WalkerContextInterface $context = null,
         $maxLevel = \INF,
-        CacheProvider $cacheProvider = null
+        ?CacheItemPoolInterface $cacheProvider = null
     ): WalkerInterface {
         $definitions = [];
         $countDefinitions = [];
@@ -150,7 +164,7 @@ abstract class AbstractWalker implements WalkerInterface
             $countDefinitions,
             $item,
             $context ?? new EmptyWalkerContext(),
-            $cacheProvider ?? new ArrayCache(),
+            $cacheProvider ?? new ArrayAdapter(),
             0,
             $maxLevel
         );
@@ -269,7 +283,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @return bool
      * @throws \ReflectionException
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->getChildren()->offsetExists($offset);
     }
@@ -349,7 +363,6 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @param mixed $item
-     *
      * @return array
      * @throws \ReflectionException
      */
@@ -360,8 +373,9 @@ abstract class AbstractWalker implements WalkerInterface
         }
 
         $itemId = static::class . '_' . get_class($item);
+        $cacheItem = $this->getCacheProvider()->getItem($itemId);
 
-        if (!$this->getCacheProvider()->contains($itemId)) {
+        if (!$cacheItem->isHit()) {
             $class = new \ReflectionClass($item);
             $classList = [];
             do {
@@ -373,17 +387,19 @@ abstract class AbstractWalker implements WalkerInterface
                 $class = $class->getParentClass();
             } while (false !== $class);
 
-            $this->getCacheProvider()->save($itemId, $classList);
+            $cacheItem->set($classList);
+
+            $this->getCacheProvider()->save($cacheItem);
             return $classList;
         }
 
-        return $this->getCacheProvider()->fetch($itemId);
+        return $cacheItem->get();
     }
 
     /**
-     * @return CacheProvider
+     * @return CacheItemPoolInterface
      */
-    protected function getCacheProvider(): CacheProvider
+    protected function getCacheProvider(): CacheItemPoolInterface
     {
         return $this->cacheProvider;
     }

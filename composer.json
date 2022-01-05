@@ -10,9 +10,11 @@
         }
     ],
     "require": {
-        "php": "^7.1 || ^8.0",
-        "doctrine/cache": "^1.10",
+        "php": ">=7.4",
+        "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "jms/serializer": "^3.7",
+        "symfony/serializer": "5.4.*",
+        "symfony/cache": ">=5.4",
         "doctrine/collections": "^1.6"
     },
     "require-dev": {
