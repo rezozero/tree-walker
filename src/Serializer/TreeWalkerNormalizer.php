@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RZ\Roadiz\CoreBundle\Serializer;
+namespace RZ\TreeWalker\Serializer;
 
 use RZ\TreeWalker\WalkerInterface;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
