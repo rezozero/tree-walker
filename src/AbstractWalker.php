@@ -38,7 +38,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @Serializer\AccessType("public_method")
      * @Serializer\Accessor(getter="count")
      * @Serializer\SerializedName("childrenCount")
-     * @SymfonySerializer\SerializedName({"childrenCount"})
+     * @SymfonySerializer\SerializedName(serializedName="childrenCount")
      */
     private ?int $count = null;
     /**
