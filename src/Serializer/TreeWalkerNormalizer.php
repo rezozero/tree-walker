@@ -5,40 +5,67 @@ declare(strict_types=1);
 namespace RZ\TreeWalker\Serializer;
 
 use RZ\TreeWalker\WalkerInterface;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerAwareInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, CacheableSupportsMethodInterface
+final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, SerializerAwareInterface
 {
-    private ObjectNormalizer $normalizer;
+    /**
+     * @var DenormalizerInterface&NormalizerInterface
+     */
+    private $decorated;
 
-    public function __construct(ObjectNormalizer $normalizer)
+    public function __construct(NormalizerInterface $decorated)
     {
-        $this->normalizer = $normalizer;
+        if (!$decorated instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
+        }
+        $this->decorated = $decorated;
     }
 
     public function normalize($object, string $format = null, array $context = [])
     {
-        return [
-            'item' => $this->normalizer->normalize($object->getItem(), $format, $context),
-            'children' => $object->getChildren()->map(function (WalkerInterface $walker) use ($format, $context) {
-                return $this->normalize($walker, $format, $context);
-            })->toArray(),
-            'level' => $object->getCurrentLevel(),
-            'childrenCount' => $object->count(),
-            'index' => $object->getIndex(),
-            'metadata' => $object->getAllMetadata(),
-        ];
+        if ($object instanceof WalkerInterface) {
+            $type = explode('\\', get_class($object));
+            return [
+                '@type' => end($type),
+                'item' => $this->decorated->normalize($object->getItem(), $format, $context),
+                'children' => $object->getChildren()->map(function (WalkerInterface $walker) use ($format, $context) {
+                    return $this->normalize($walker, $format, $context);
+                })->toArray(),
+                'level' => $object->getCurrentLevel(),
+                'childrenCount' => $object->count(),
+                'index' => $object->getIndex(),
+                'metadata' => $object->getAllMetadata(),
+            ];
+        }
+        return $this->decorated->normalize($object, $format, $context);
     }
 
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
-        return $data instanceof WalkerInterface;
+        return $this->decorated->supportsNormalization($data, $format);
     }
 
-    public function hasCacheableSupportsMethod(): bool
+    /**
+     * @param mixed $data
+     * @param string $class
+     * @param string|null $format
+     * @param array $context
+     * @return mixed
+     */
+    public function denormalize($data, $class, $format = null, array $context = [])
     {
-        return __CLASS__ === TreeWalkerNormalizer::class;
+        return $this->decorated->denormalize($data, $class, $format, $context);
+    }
+
+    public function setSerializer(SerializerInterface $serializer): void
+    {
+        if ($this->decorated instanceof SerializerAwareInterface) {
+            $this->decorated->setSerializer($serializer);
+        }
     }
 }
