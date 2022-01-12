@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, SerializerAwareInterface
+final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
     /**
      * @var DenormalizerInterface&NormalizerInterface
@@ -48,6 +48,11 @@ final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, Ser
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $this->decorated->supportsNormalization($data, $format);
+    }
+
+    public function supportsDenormalization($data, $type, $format = null): bool
+    {
+        return $this->decorated->supportsDenormalization($data, $type, $format);
     }
 
     /**
