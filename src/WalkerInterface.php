@@ -6,7 +6,7 @@ namespace RZ\TreeWalker;
 
 use Doctrine\Common\Collections\Collection;
 
-interface WalkerInterface extends \IteratorAggregate, \Countable, \ArrayAccess
+interface WalkerInterface extends \Countable, \ArrayAccess
 {
     /**
      * @param mixed $item
@@ -98,8 +98,19 @@ interface WalkerInterface extends \IteratorAggregate, \Countable, \ArrayAccess
 
     /**
      * @return int|float
+     * @deprecated Use getLevel
      */
     public function getCurrentLevel();
+
+    /**
+     * @return int|float
+     */
+    public function getLevel();
+
+    /**
+     * @return float|int
+     */
+    public function getMaxLevel();
 
     /**
      * @param string $key

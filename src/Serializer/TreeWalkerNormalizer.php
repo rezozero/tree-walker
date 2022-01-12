@@ -36,7 +36,7 @@ final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, Den
                 'children' => $object->getChildren()->map(function (WalkerInterface $walker) use ($format, $context) {
                     return $this->normalize($walker, $format, $context);
                 })->toArray(),
-                'level' => $object->getCurrentLevel(),
+                'level' => $object->getLevel(),
                 'childrenCount' => $object->count(),
                 'index' => $object->getIndex(),
                 'metadata' => $object->getAllMetadata(),

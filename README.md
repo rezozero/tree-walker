@@ -4,9 +4,14 @@
 
 **Creates a configurable tree walker using different definitions for each node based on its PHP class or interface.**
 
-`WalkerInterface` implements `\IteratorAggregate` and `\Countable` in order to use it seamlessly in your PHP code and Twig templates. Each `WalkerInterface` will carry your *node* item and its children.
+`WalkerInterface` implements `\Countable` in order to use it seamlessly in your PHP code and Twig templates. Each `WalkerInterface` will carry your *node* item and its children.
+
+Since v1.1.0 `AbstractWalker` does not implement `\IteratorAggregate` in order to be compatible with *api-platform* normalizer (it normalizes it as a Hydra:Collection).
+But if you need it in you can add `\IteratorAggregate` to your custom Walker implementation, `getIterator` is already implemented.
 
 ## Usage in Twig
+
+- First, make sure your Walker instance implements `\IteratorAggregate` in order to use it directly into a loop
 
 ### Walk forward
 Here is an example of a **recursive** navigation item template using our `WalkerInterface`:
@@ -154,7 +159,7 @@ final class DummyChildrenDefinition
     }
 }
 
-final class DummyWalker extends AbstractWalker
+final class DummyWalker extends AbstractWalker implements \IteratorAggregate
 {
     protected function initializeDefinitions()
     {

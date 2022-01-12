@@ -17,6 +17,8 @@ use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
  */
 abstract class AbstractWalker implements WalkerInterface
 {
+    use IteratorAggregateTrait;
+
     /**
      * @var CacheItemPoolInterface
      * @Serializer\Exclude()
@@ -205,7 +207,7 @@ abstract class AbstractWalker implements WalkerInterface
         if ($current->isItemEqualsTo($item)) {
             return $current;
         }
-        foreach ($current as $walker) {
+        foreach ($current->getChildren() as $walker) {
             if (null !== $innerWalker = $this->doRecursiveFindWalkerForItem($walker, $item)) {
                 return $innerWalker;
             }
@@ -234,7 +236,7 @@ abstract class AbstractWalker implements WalkerInterface
         if ($current->getItem() instanceof $classname) {
             $foundItems[] = $current;
         }
-        foreach ($current as $walker) {
+        foreach ($current->getChildren() as $walker) {
             $foundItems = array_merge($foundItems, $this->doRecursiveFindWalkersOfType($walker, $classname));
         }
 
@@ -267,14 +269,6 @@ abstract class AbstractWalker implements WalkerInterface
     public function getItem()
     {
         return $this->item;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIterator()
-    {
-        return $this->count() > 0 ? $this->getChildren()->getIterator() : new \ArrayIterator();
     }
 
     /**
@@ -556,10 +550,27 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @return int|float
+     * @deprecated Use getLevel
      */
     public function getCurrentLevel()
     {
+        return $this->getLevel();
+    }
+
+    /**
+     * @return int|float
+     */
+    public function getLevel()
+    {
         return $this->level;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getMaxLevel()
+    {
+        return $this->maxLevel;
     }
 
     /**
