@@ -320,7 +320,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @inheritDoc
      * @throws \ReflectionException
      */
-    public function count()
+    public function count(): int
     {
         if (null === $this->count) {
             if ($this->level < $this->maxLevel) {
