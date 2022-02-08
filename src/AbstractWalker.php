@@ -174,6 +174,8 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @inheritDoc
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getWalkerAtItem($item): ?WalkerInterface
     {
@@ -218,6 +220,8 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @inheritDoc
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getWalkersOfType(string $classname): array
     {
@@ -276,6 +280,8 @@ abstract class AbstractWalker implements WalkerInterface
      * @param mixed $offset
      * @return bool
      * @throws \ReflectionException
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function offsetExists($offset): bool
     {
@@ -287,6 +293,8 @@ abstract class AbstractWalker implements WalkerInterface
      * @param mixed $offset
      * @return mixed
      * @throws \ReflectionException
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function offsetGet($offset)
     {
@@ -341,6 +349,8 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @inheritDoc
      * @throws \ReflectionException
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getCountDefinitionForItem($item): ?callable
     {
@@ -512,6 +522,8 @@ abstract class AbstractWalker implements WalkerInterface
      * @param mixed $item
      *
      * @return bool
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function isItemEqualsTo($item): bool
     {
@@ -522,6 +534,8 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @inheritDoc
      * @throws \ReflectionException
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getDefinitionForItem($item): callable
     {
@@ -577,6 +591,8 @@ abstract class AbstractWalker implements WalkerInterface
      * @param string $key
      * @param mixed $data
      * @return $this|WalkerInterface
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function addMetadata(string $key, $data)
     {
