@@ -588,23 +588,18 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
+     * @param string|null $key
+     * @param mixed|null $default
+     * @return mixed|array
      */
-    public function getMetadata(string $key, $default = null)
+    public function getMetadata(?string $key = null, $default = null)
     {
+        if (null === $key) {
+            return $this->metadata ?? [];
+        }
         if (null !== $this->metadata && array_key_exists($key, $this->metadata)) {
             return $this->metadata[$key];
         }
         return $default;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllMetadata(): array
-    {
-        return $this->metadata ?? [];
     }
 }

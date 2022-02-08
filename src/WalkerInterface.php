@@ -120,16 +120,11 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     public function addMetadata(string $key, $data);
 
     /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
+     * @param string|null $key
+     * @param mixed|null $default
+     * @return mixed|array
      */
-    public function getMetadata(string $key, $default = null);
-
-    /**
-     * @return array
-     */
-    public function getAllMetadata(): array;
+    public function getMetadata(?string $key = null, $default = null);
 
     /**
      * Perform a custom equality check between current walker item and

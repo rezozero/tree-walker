@@ -39,7 +39,7 @@ final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, Den
                 'level' => $object->getLevel(),
                 'childrenCount' => $object->count(),
                 'index' => $object->getIndex(),
-                'metadata' => $object->getAllMetadata(),
+                'metadata' => $object->getMetadata(),
             ];
         }
         return $this->decorated->normalize($object, $format, $context);
