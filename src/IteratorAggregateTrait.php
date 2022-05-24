@@ -19,6 +19,7 @@ trait IteratorAggregateTrait
      * @return array|\ArrayIterator|\Traversable
      * @throws \ReflectionException
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->count() > 0 ? $this->getChildren()->getIterator() : new \ArrayIterator();
