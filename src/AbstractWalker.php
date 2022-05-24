@@ -288,6 +288,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @return mixed
      * @throws \ReflectionException
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getChildren()->offsetGet($offset);
@@ -300,6 +301,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @throws \RuntimeException
      * @deprecated WalkerInterface has read-only children.
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new \RuntimeException('WalkerInterface has read-only children.');
@@ -311,6 +313,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @throws \RuntimeException
      * @deprecated WalkerInterface has read-only children.
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new \RuntimeException('WalkerInterface has read-only children.');
