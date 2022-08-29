@@ -10,7 +10,7 @@ install:
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev --no-interaction
 script:
-    - php vendor/bin/phpcbf -p
+    - php vendor/bin/phpcs -p
     - php vendor/bin/phpstan analyse -c phpstan.neon
 
 jobs:
