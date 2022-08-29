@@ -9,8 +9,7 @@ use Doctrine\Common\Collections\Collection;
 interface WalkerInterface extends \Countable, \ArrayAccess
 {
     /**
-     * @param mixed $item
-     *
+     * @param object|null $item
      * @return callable
      */
     public function getDefinitionForItem($item): callable;
@@ -32,7 +31,7 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     public function addCountDefinition(string $classname, callable $countDefinition): WalkerInterface;
 
     /**
-     * @param mixed $item
+     * @param object|null $item
      *
      * @return callable|null
      */
@@ -49,7 +48,8 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     public function isRoot(): bool;
 
     /**
-     * @return Collection
+     * @return Collection<WalkerInterface>
+     * @psalm-return Collection<WalkerInterface>
      */
     public function getChildren(): Collection;
 
@@ -74,7 +74,7 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     public function getIndex(): ?int;
 
     /**
-     * @return mixed
+     * @return object|null
      */
     public function getItem();
 
@@ -82,7 +82,7 @@ interface WalkerInterface extends \Countable, \ArrayAccess
      * This method must return a WalkerInterface for your given item. Null will be returned
      * if item cannot be found inside your tree.
      *
-     * @param mixed $item Item to find through your tree walker.
+     * @param object|null $item Item to find through your tree walker.
      * @return WalkerInterface|null
      */
     public function getWalkerAtItem($item): ?WalkerInterface;
@@ -92,7 +92,8 @@ interface WalkerInterface extends \Countable, \ArrayAccess
      * in a flat array.
      *
      * @param string $classname Full qualified class name to look for in walker tree.
-     * @return array containing all found walkers for this classname. Array wil be empty if not found
+     * @return array<WalkerInterface> containing all found walkers for this classname. Array wil be empty if not found
+     * @psalm-return array<WalkerInterface>
      */
     public function getWalkersOfType(string $classname): array;
 
@@ -133,7 +134,7 @@ interface WalkerInterface extends \Countable, \ArrayAccess
      * For example, to compare two Doctrine objects with same ID but not the
      * same in memory.
      *
-     * @param mixed $item
+     * @param object|null $item
      * @return bool
      */
     public function isItemEqualsTo($item): bool;

@@ -4,7 +4,7 @@
 
 **Creates a configurable tree walker using different definitions for each node based on its PHP class or interface.**
 
-`WalkerInterface` implements `\Countable` in order to use it seamlessly in your PHP code and Twig templates. Each `WalkerInterface` will carry your *node* item and its children.
+`WalkerInterface` implements `\Countable` in order to use it seamlessly in your PHP code and Twig templates. Each `WalkerInterface` will carry your *node* object and its children.
 
 Since v1.1.0 `AbstractWalker` does not implement `\IteratorAggregate` in order to be compatible with *api-platform* normalizer (it normalizes it as a Hydra:Collection).
 But if you need it in you can add `\IteratorAggregate` to your custom Walker implementation, `getIterator` is already implemented.
@@ -84,7 +84,7 @@ You can *reverse* walk (aka *moon walking*) to display a page breadcrumbs for ex
 1. Create a `WalkerContextInterface` instance to hold every service your `callable` definitions will use to fetch each tree node children. For example: a *Doctrine repository*, a *QueryBuilder*, even your *PDO* instance.
 2. Create a custom *Walker* class **extending** `AbstractWalker`.   
 You’ll notice that `AbstractWalker` is very strict and prevents overriding its *constructor* in order to abstract all `WalkerInterface` instantiations from your business logic. **All your custom logic must be included in `definitions` and `countDefinitions`.**
-3. Add `definitions` and `countDefinitions` from your custom *Walker*. A *definition* `callable` must return an `array` (or an *iterable* object) of your items. A *countDefinition* `callable` must return an `int` representing your items number. *CountDefinitions* are optional: `AbstractWalker::count()` method will fallback on using `AbstractWalker::getChildren()->count()`.
+3. Add `definitions` and `countDefinitions` from your custom *Walker*. A *definition* `callable` must return an `array` (or an *iterable* object) of your items. A *countDefinition* `callable` must return an `int` representing your items number. *CountDefinitions* are optional: `AbstractWalker::count()` method will fall back on using `AbstractWalker::getChildren()->count()`.
 4. Instantiate your custom Walker with your root item, and your context object
 
 Here is some pseudo PHP code example:
@@ -226,8 +226,8 @@ Obviously, **do not use** `children` and `parent` groups at the same time…
 
 ## Stoppable definition
 
-You may to prevent walker to continue after a given item definition. For example to prevent infinite loops.
-You can make your *definition* class to implement `StoppableDefinition` interface.
+You may want to prevent Walker to continue after a given item definition. For example to prevent infinite loops.
+You can write your *definition* class implementing `StoppableDefinition` interface.
 
 ```php
 final class DummyChildrenDefinition

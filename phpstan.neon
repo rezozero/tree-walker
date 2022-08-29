@@ -8,6 +8,8 @@ parameters:
         - */static/*
     ignoreErrors:
         - '#Doctrine\\Persistence\\ObjectRepository#'
+        - '#should return RZ\\TreeWalker\\WalkerInterface\|null but returns mixed#'
+        - '#Closure\(RZ\\TreeWalker\\WalkerInterface\): array\|ArrayObject\|bool\|float\|int\|string\|null given#'
     reportUnmatchedIgnoredErrors: false
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false

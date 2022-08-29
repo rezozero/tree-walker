@@ -27,7 +27,7 @@ abstract class AbstractWalker implements WalkerInterface
      */
     protected CacheItemPoolInterface $cacheProvider;
     /**
-     * @var Collection|null
+     * @var Collection<WalkerInterface>|null
      * @Serializer\Groups({"children"})
      * @SymfonySerializer\Groups({"children"})
      * @Serializer\Accessor(getter="getChildren")
@@ -63,7 +63,7 @@ abstract class AbstractWalker implements WalkerInterface
      */
     private WalkerInterface $root;
     /**
-     * @var mixed
+     * @var object|null
      * @Serializer\Groups({"walker"})
      * @SymfonySerializer\Groups({"walker"})
      */
@@ -104,7 +104,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @param WalkerInterface|null   $parent
      * @param array                  $definitions
      * @param array                  $countDefinitions
-     * @param mixed                  $item
+     * @param object|null            $item
      * @param WalkerContextInterface $context
      * @param CacheItemPoolInterface $cacheProvider
      * @param int|float              $level
@@ -144,7 +144,7 @@ abstract class AbstractWalker implements WalkerInterface
     abstract protected function initializeDefinitions();
 
     /**
-     * @param mixed                       $item
+     * @param object|null                 $item
      * @param WalkerContextInterface|null $context
      * @param int|float                   $maxLevel
      * @param CacheItemPoolInterface|null $cacheProvider
@@ -199,7 +199,7 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @param WalkerInterface $current
-     * @param mixed           $item
+     * @param object|null     $item
      *
      * @return WalkerInterface|null
      */
@@ -208,6 +208,7 @@ abstract class AbstractWalker implements WalkerInterface
         if ($current->isItemEqualsTo($item)) {
             return $current;
         }
+        /** @var WalkerInterface $walker */
         foreach ($current->getChildren() as $walker) {
             if (null !== $innerWalker = $this->doRecursiveFindWalkerForItem($walker, $item)) {
                 return $innerWalker;
@@ -237,6 +238,7 @@ abstract class AbstractWalker implements WalkerInterface
         if ($current->getItem() instanceof $classname) {
             $foundItems[] = $current;
         }
+        /** @var WalkerInterface $walker */
         foreach ($current->getChildren() as $walker) {
             $foundItems = array_merge($foundItems, $this->doRecursiveFindWalkersOfType($walker, $classname));
         }
@@ -360,8 +362,8 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @param mixed $item
-     * @return array
+     * @param object|null $item
+     * @return string[]
      * @throws \ReflectionException
      */
     protected function getItemClassesList($item): array
@@ -395,7 +397,11 @@ abstract class AbstractWalker implements WalkerInterface
             return $classList;
         }
 
-        return $cacheItem->get();
+        $classList = $cacheItem->get();
+        if (!is_array($classList)) {
+            throw new \RuntimeException('Item class list should be an array of string');
+        }
+        return $classList;
     }
 
     /**
@@ -407,7 +413,7 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @return Collection
+     * @inheritDoc
      * @throws \ReflectionException
      */
     public function getChildren(): Collection
@@ -524,13 +530,14 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @param mixed $item
+     * @param object|null $item
      *
      * @return bool
      */
     public function isItemEqualsTo($item): bool
     {
-        return get_class($this->getItem()) === get_class($item) &&
+        return null !== $item && null !== $this->getItem() &&
+            get_class($this->getItem()) === get_class($item) &&
             $this->getItem() === $item;
     }
 
