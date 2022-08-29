@@ -420,27 +420,27 @@ abstract class AbstractWalker implements WalkerInterface
     {
         if (null === $this->children) {
             try {
-                if ($this->level !== \INF && $this->level < $this->maxLevel) {
+                if ($this->level < $this->maxLevel) {
                     $callable = $this->getDefinitionForItem($this->item);
                     $collection = (new ArrayCollection($callable($this->item, $this)))->filter(function ($item) {
                         return null !== $item;
                     });
 
-                    $nextLevel = $this->level + 1;
+                    $maxLevel = $this->maxLevel;
 
                     /*
                      * If definition is stopping collection, this item's children MUST not walk for their
-                     * own children. So we set next level walker to Infinity
+                     * own children. So we set max level walker to current level.
                      */
                     if ($callable instanceof StoppableDefinition && $callable->isStoppingCollectionOnceInvoked()) {
-                        $nextLevel = \INF;
+                        $maxLevel = $this->level;
                     }
 
                     /*
                      * Call invokable definition with current item and current Walker
                      * if you need to add metadata to your Walker after fetching its children.
                      */
-                    $this->children = $collection->map(function ($item) use ($nextLevel) {
+                    $this->children = $collection->map(function ($item) use ($maxLevel) {
                         return new static(
                             $this->getRoot(),
                             $this,
@@ -449,8 +449,8 @@ abstract class AbstractWalker implements WalkerInterface
                             $item,
                             $this->context,
                             $this->cacheProvider,
-                            $nextLevel,
-                            $this->maxLevel
+                            $this->level + 1,
+                            $maxLevel
                         );
                     });
                 } else {
