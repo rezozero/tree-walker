@@ -1,3 +1,9 @@
+## 1.2.1 (2022-08-29)
+
+### Bug Fixes
+
+* Do not set level to `\INF` because its value can be used in top-level applications ([5331036](https://github.com/rezozero/tree-walker/commit/53310366976f6e7b5a7dbe36994a918e629a865a))
+
 ## 1.2.0 (2022-08-29)
 
 ### Features
