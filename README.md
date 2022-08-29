@@ -9,6 +9,9 @@
 Since v1.1.0 `AbstractWalker` does not implement `\IteratorAggregate` in order to be compatible with *api-platform* normalizer (it normalizes it as a Hydra:Collection).
 But if you need it in you can add `\IteratorAggregate` to your custom Walker implementation, `getIterator` is already implemented.
 
+If your application may introduce cyclic references between objects, you can use `AbstractCycleAwareWalker` instead of `AbstractWalker` to keep track of collected items and prevent
+collecting same item children twice. Collision detection is based on `spl_object_id` method.
+
 ## Usage in Twig
 
 - First, make sure your Walker instance implements `\IteratorAggregate` in order to use it directly into a loop

@@ -6,7 +6,7 @@ namespace RZ\TreeWalker;
 
 use RZ\TreeWalker\Definition\ZeroChildrenDefinition;
 
-class ZeroChildrenWalker extends AbstractWalker
+class ZeroChildrenWalker extends AbstractCycleAwareWalker
 {
     protected function initializeDefinitions()
     {
