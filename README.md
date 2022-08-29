@@ -223,3 +223,28 @@ You should add serialization groups to ensure you do not fall into an infinite l
 - `walker_metadata`: serializes current level user metadata.
 
 Obviously, **do not use** `children` and `parent` groups at the same time…
+
+## Stoppable definition
+
+You may to prevent walker to continue after a given item definition. For example to prevent infinite loops.
+You can make your *definition* class to implement `StoppableDefinition` interface.
+
+```php
+final class DummyChildrenDefinition
+{
+    use ContextualDefinitionTrait;
+    
+    public function isStoppingCollectionOnceInvoked(): bool
+    {
+        return true;
+    }
+
+    public function __invoke(Dummy $dummy, WalkerInterface $walker){
+        // ...
+    }
+}
+```
+
+If `isStoppingCollectionOnceInvoked` method return `true`, then each child won't have any children. It is useful when
+you want to prevent your tree to go deeper for specific item types. This is more specific than configuring the global
+`maxLevel` value on your tree-walker root instance.

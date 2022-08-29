@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
 use Psr\Cache\CacheItemPoolInterface;
+use RZ\TreeWalker\Definition\StoppableDefinition;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Serializer\Annotation as SymfonySerializer;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
@@ -413,16 +414,27 @@ abstract class AbstractWalker implements WalkerInterface
     {
         if (null === $this->children) {
             try {
-                if ($this->level < $this->maxLevel) {
+                if ($this->level !== \INF && $this->level < $this->maxLevel) {
                     $callable = $this->getDefinitionForItem($this->item);
                     $collection = (new ArrayCollection($callable($this->item, $this)))->filter(function ($item) {
                         return null !== $item;
                     });
+
+                    $nextLevel = $this->level + 1;
+
+                    /*
+                     * If definition is stopping collection, this item's children MUST not walk for their
+                     * own children. So we set next level walker to Infinity
+                     */
+                    if ($callable instanceof StoppableDefinition && $callable->isStoppingCollectionOnceInvoked()) {
+                        $nextLevel = \INF;
+                    }
+
                     /*
                      * Call invokable definition with current item and current Walker
                      * if you need to add metadata to your Walker after fetching its children.
                      */
-                    $this->children = $collection->map(function ($item) {
+                    $this->children = $collection->map(function ($item) use ($nextLevel) {
                         return new static(
                             $this->getRoot(),
                             $this,
@@ -431,7 +443,7 @@ abstract class AbstractWalker implements WalkerInterface
                             $item,
                             $this->context,
                             $this->cacheProvider,
-                            $this->level + 1,
+                            $nextLevel,
                             $this->maxLevel
                         );
                     });
