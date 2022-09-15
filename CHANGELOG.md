@@ -1,3 +1,9 @@
+## 1.2.2 (2022-09-15)
+
+### Bug Fixes
+
+* Added default ignored fields and methods when no serialization groups are defined ([21940f7](https://github.com/rezozero/tree-walker/commit/21940f76c479aef99c93c4b63a45c679d1a7818c))
+
 ## 1.2.1 (2022-08-29)
 
 ### Bug Fixes
