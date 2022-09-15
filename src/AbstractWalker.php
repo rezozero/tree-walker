@@ -493,6 +493,8 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @return WalkerInterface|null
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getNext(): ?WalkerInterface
     {
@@ -512,6 +514,8 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @return WalkerInterface|null
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getPrevious(): ?WalkerInterface
     {
@@ -533,6 +537,8 @@ abstract class AbstractWalker implements WalkerInterface
      * @param object|null $item
      *
      * @return bool
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function isItemEqualsTo($item): bool
     {
@@ -544,6 +550,8 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @inheritDoc
      * @throws \ReflectionException
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getDefinitionForItem($item): callable
     {
@@ -564,6 +572,8 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @return WalkerContextInterface
+     * @Serializer\Exclude()
+     * @SymfonySerializer\Ignore()
      */
     public function getContext(): WalkerContextInterface
     {

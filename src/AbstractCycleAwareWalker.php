@@ -6,9 +6,16 @@ namespace RZ\TreeWalker;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation as SymfonySerializer;
 
 abstract class AbstractCycleAwareWalker extends AbstractWalker
 {
+    /**
+     * @var array
+     * @Serializer\Exclude
+     * @SymfonySerializer\Ignore
+     */
     private array $itemIds = [];
 
     /**
