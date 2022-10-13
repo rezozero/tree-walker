@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RZ\TreeWalker\Serializer;
 
 use RZ\TreeWalker\WalkerInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -58,9 +59,10 @@ final class TreeWalkerNormalizer implements ContextAwareNormalizerInterface, Den
     /**
      * @param mixed $data
      * @param string $class
-     * @param string|null $format
+     * @param null $format
      * @param array $context
      * @return mixed
+     * @throws ExceptionInterface
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {

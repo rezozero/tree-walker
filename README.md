@@ -151,7 +151,8 @@ final class DummyChildrenDefinition
 {
     use ContextualDefinitionTrait;
 
-    public function __invoke(Dummy $dummy, WalkerInterface $walker){
+    public function __invoke(Dummy $dummy, WalkerInterface $walker): array
+    {
         if ($this->context instanceof DummyWalkerContext) {
             return array_merge(
                 $this->context->getDummyRepository()->findByParentDummyId($dummy->getId()),
@@ -164,7 +165,7 @@ final class DummyChildrenDefinition
 
 final class DummyWalker extends AbstractWalker implements \IteratorAggregate
 {
-    protected function initializeDefinitions()
+    protected function initializeDefinitions(): void
     {
         /*
          * All Tree-walker logic occurs here…
@@ -242,7 +243,8 @@ final class DummyChildrenDefinition
         return true;
     }
 
-    public function __invoke(Dummy $dummy, WalkerInterface $walker){
+    public function __invoke(Dummy $dummy, WalkerInterface $walker): array
+    {
         // ...
     }
 }

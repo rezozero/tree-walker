@@ -11,11 +11,10 @@ use Symfony\Component\Serializer\Annotation as SymfonySerializer;
 
 abstract class AbstractCycleAwareWalker extends AbstractWalker
 {
-    /**
-     * @var array
-     * @Serializer\Exclude
-     * @SymfonySerializer\Ignore
-     */
+    #[
+        Serializer\Exclude,
+        SymfonySerializer\Ignore
+    ]
     private array $itemIds = [];
 
     /**
@@ -28,14 +27,11 @@ abstract class AbstractCycleAwareWalker extends AbstractWalker
     public function getChildren(): Collection
     {
         $root = $this->getRoot();
-        if ($root instanceof AbstractCycleAwareWalker) {
-            if ($root->registerItem($this->getItem())) {
-                return parent::getChildren();
-            } else {
-                return new ArrayCollection();
-            }
+        if ($root->registerItem($this->getItem())) {
+            return parent::getChildren();
+        } else {
+            return new ArrayCollection();
         }
-        return parent::getChildren();
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RZ\TreeWalker;
 
 use Doctrine\Common\Collections\Collection;
+use Psr\Cache\InvalidArgumentException;
 
 trait IteratorAggregateTrait
 {
@@ -17,6 +18,7 @@ trait IteratorAggregateTrait
 
     /**
      * @return array|\ArrayIterator|\Traversable
+     * @throws InvalidArgumentException
      * @throws \ReflectionException
      */
     #[\ReturnTypeWillChange]

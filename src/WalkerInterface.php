@@ -12,35 +12,35 @@ interface WalkerInterface extends \Countable, \ArrayAccess
      * @param object|null $item
      * @return callable
      */
-    public function getDefinitionForItem($item): callable;
+    public function getDefinitionForItem(?object $item): callable;
 
     /**
      * @param string   $classname
      * @param callable $definition
      *
-     * @return WalkerInterface
+     * @return static
      */
-    public function addDefinition(string $classname, callable $definition): WalkerInterface;
+    public function addDefinition(string $classname, callable $definition): static;
 
     /**
      * @param string   $classname
      * @param callable $countDefinition
      *
-     * @return WalkerInterface
+     * @return static
      */
-    public function addCountDefinition(string $classname, callable $countDefinition): WalkerInterface;
+    public function addCountDefinition(string $classname, callable $countDefinition): static;
 
     /**
      * @param object|null $item
      *
      * @return callable|null
      */
-    public function getCountDefinitionForItem($item): ?callable;
+    public function getCountDefinitionForItem(?object $item): ?callable;
 
     /**
-     * @return WalkerInterface
+     * @return static
      */
-    public function getRoot(): WalkerInterface;
+    public function getRoot(): static;
 
     /**
      * @return bool
@@ -48,25 +48,25 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     public function isRoot(): bool;
 
     /**
-     * @return Collection<WalkerInterface>
-     * @psalm-return Collection<WalkerInterface>
+     * @return Collection<static>
+     * @psalm-return Collection<static>
      */
     public function getChildren(): Collection;
 
     /**
-     * @return WalkerInterface|null Return parent walker or null if this is root walker.
+     * @return static|null Return parent walker or null if this is root walker.
      */
-    public function getParent(): ?WalkerInterface;
+    public function getParent(): ?static;
 
     /**
-     * @return WalkerInterface|null Return next walker in parent or null if this is root walker or the last item.
+     * @return static|null Return next walker in parent or null if this is root walker or the last item.
      */
-    public function getNext(): ?WalkerInterface;
+    public function getNext(): ?static;
 
     /**
-     * @return WalkerInterface|null Return previous walker in parent or null if this is root walker or the first item.
+     * @return static|null Return previous walker in parent or null if this is root walker or the first item.
      */
-    public function getPrevious(): ?WalkerInterface;
+    public function getPrevious(): ?static;
 
     /**
      * @return int|null Return walker index in parent or null if this is root walker.
@@ -76,24 +76,24 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     /**
      * @return object|null
      */
-    public function getItem();
+    public function getItem(): ?object;
 
     /**
      * This method must return a WalkerInterface for your given item. Null will be returned
      * if item cannot be found inside your tree.
      *
      * @param object|null $item Item to find through your tree walker.
-     * @return WalkerInterface|null
+     * @return static|null
      */
-    public function getWalkerAtItem($item): ?WalkerInterface;
+    public function getWalkerAtItem(?object $item): ?static;
 
     /**
      * Traverse all Walker tree to find items instance of your given $classname and return their walkers
      * in a flat array.
      *
      * @param string $classname Full qualified class name to look for in walker tree.
-     * @return array<WalkerInterface> containing all found walkers for this classname. Array wil be empty if not found
-     * @psalm-return array<WalkerInterface>
+     * @return array<static> containing all found walkers for this classname. Array wil be empty if not found
+     * @psalm-return array<static>
      */
     public function getWalkersOfType(string $classname): array;
 
@@ -101,31 +101,31 @@ interface WalkerInterface extends \Countable, \ArrayAccess
      * @return int|float
      * @deprecated Use getLevel
      */
-    public function getCurrentLevel();
+    public function getCurrentLevel(): float|int;
 
     /**
      * @return int|float
      */
-    public function getLevel();
+    public function getLevel(): float|int;
 
     /**
      * @return float|int
      */
-    public function getMaxLevel();
+    public function getMaxLevel(): float|int;
 
     /**
      * @param string $key
      * @param mixed $data
-     * @return WalkerInterface
+     * @return static
      */
-    public function addMetadata(string $key, $data);
+    public function addMetadata(string $key, mixed $data): static;
 
     /**
      * @param string|null $key
      * @param mixed|null $default
      * @return mixed|array
      */
-    public function getMetadata(?string $key = null, $default = null);
+    public function getMetadata(?string $key = null, mixed $default = null): mixed;
 
     /**
      * Perform a custom equality check between current walker item and
@@ -137,5 +137,5 @@ interface WalkerInterface extends \Countable, \ArrayAccess
      * @param object|null $item
      * @return bool
      */
-    public function isItemEqualsTo($item): bool;
+    public function isItemEqualsTo(?object $item): bool;
 }

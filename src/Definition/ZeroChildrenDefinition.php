@@ -16,7 +16,7 @@ final class ZeroChildrenDefinition
     /**
      * @return array
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [];
     }

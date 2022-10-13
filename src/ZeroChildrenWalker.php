@@ -8,7 +8,7 @@ use RZ\TreeWalker\Definition\ZeroChildrenDefinition;
 
 class ZeroChildrenWalker extends AbstractCycleAwareWalker
 {
-    protected function initializeDefinitions()
+    protected function initializeDefinitions(): void
     {
         $this->addDefinition('object', new ZeroChildrenDefinition($this->getContext()));
     }
