@@ -258,6 +258,7 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @inheritDoc
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->count() > 0 ? $this->getChildren()->getIterator() : new \ArrayIterator();
@@ -269,6 +270,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @return bool
      * @throws \ReflectionException
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->getChildren()->offsetExists($offset);
@@ -280,6 +282,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @return mixed
      * @throws \ReflectionException
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getChildren()->offsetGet($offset);
@@ -292,6 +295,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @throws \RuntimeException
      * @deprecated WalkerInterface has read-only children.
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new \RuntimeException('WalkerInterface has read-only children.');
@@ -303,6 +307,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @throws \RuntimeException
      * @deprecated WalkerInterface has read-only children.
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new \RuntimeException('WalkerInterface has read-only children.');
@@ -312,6 +317,7 @@ abstract class AbstractWalker implements WalkerInterface
      * @inheritDoc
      * @throws \ReflectionException
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         if (null === $this->count) {
