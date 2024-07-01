@@ -36,7 +36,6 @@ jobs:
             - name: Run PHP Code Sniffer
               run: vendor/bin/phpcs -p ./src
             - name: Run unit tests
-              run: |
-                  XDEBUG_MODE=coverage vendor/bin/phpunit -v
+              run: vendor/bin/phpunit -v
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse --no-progress -c phpstan.neon
