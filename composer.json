@@ -19,11 +19,19 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3",
-        "phpstan/phpstan": "^1.8.2"
+        "phpstan/phpstan": "^1.8.2",
+        "phpunit/phpunit": "^9.5",
+        "symfony/property-access": "^7.1"
     },
     "autoload": {
         "psr-4": {
             "RZ\\TreeWalker\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RZ\\TreeWalker\\": "src/",
+            "RZ\\TreeWalker\\Tests\\": "tests/"
         }
     }
 }

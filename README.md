@@ -1,6 +1,6 @@
 # Tree Walker
 
-[![Build Status](https://travis-ci.org/rezozero/tree-walker.svg?branch=master)](https://travis-ci.org/rezozero/tree-walker) ![License](http://img.shields.io/:license-mit-blue.svg?style=flat) [![Packagist](https://img.shields.io/packagist/v/rezozero/tree-walker.svg?style=flat)](https://packagist.org/packages/rezozero/tree-walker)
+[![Tests status](https://github.com/rezozero/tree-walker/actions/workflows/run-test.yml/badge.svg)](https://github.com/rezozero/tree-walker/actions/workflows/run-test.yml) ![License](http://img.shields.io/:license-mit-blue.svg?style=flat) [![Packagist](https://img.shields.io/packagist/v/rezozero/tree-walker.svg?style=flat)](https://packagist.org/packages/rezozero/tree-walker)
 
 **Creates a configurable tree walker using different definitions for each node based on its PHP class or interface.**
 

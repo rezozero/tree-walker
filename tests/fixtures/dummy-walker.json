@@ -1,0 +1,253 @@
+{
+    "children": [
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 1 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 1 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 1 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 1 - child 1"
+                    }
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 2 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 2 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 2 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 1 - child 2"
+                    }
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 3 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 3 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 1 - child 3 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 1 - child 3"
+                    }
+                }
+            ],
+            "item": {
+                "name": "ancestor - child 1"
+            }
+        },
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 1 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 1 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 1 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 2 - child 1"
+                    }
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 2 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 2 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 2 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 2 - child 2"
+                    }
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 3 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 3 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 2 - child 3 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 2 - child 3"
+                    }
+                }
+            ],
+            "item": {
+                "name": "ancestor - child 2"
+            }
+        },
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 1 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 1 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 1 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 3 - child 1"
+                    }
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 2 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 2 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 2 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 3 - child 2"
+                    }
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 3 - child 1"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 3 - child 2"
+                            }
+                        },
+                        {
+                            "children": [],
+                            "item": {
+                                "name": "ancestor - child 3 - child 3 - child 3"
+                            }
+                        }
+                    ],
+                    "item": {
+                        "name": "ancestor - child 3 - child 3"
+                    }
+                }
+            ],
+            "item": {
+                "name": "ancestor - child 3"
+            }
+        }
+    ],
+    "item": {
+        "name": "ancestor"
+    }
+}

@@ -1,4 +1,4 @@
-name: Static analysis and code style
+name: Unit tests, static analysis and code style
 
 on:
     push:
@@ -35,5 +35,8 @@ jobs:
               run: composer install --no-scripts --no-ansi --no-interaction --no-progress
             - name: Run PHP Code Sniffer
               run: vendor/bin/phpcs -p ./src
+            - name: Run unit tests
+              run: |
+                  XDEBUG_MODE=coverage vendor/bin/phpunit -v
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse --no-progress -c phpstan.neon
