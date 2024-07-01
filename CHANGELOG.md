@@ -2,6 +2,12 @@
 
 All notable changes to Tree-Walker will be documented in this file.
 
+## [1.4.1](https://github.com/rezozero/tree-walker/compare/1.4.0...1.4.1) - 2024-07-01
+
+### Bug Fixes
+
+- Allow `AbstractCycleAwareWalker` to access `getChildren` method more than only once. - ([a0384e0](https://github.com/rezozero/tree-walker/commit/a0384e01b909d7a8ba36fccd65ed76d164725895))
+
 ## [1.4.0](https://github.com/rezozero/tree-walker/compare/1.3.0...1.4.0) - 2024-02-27
 
 ### CI/CD
