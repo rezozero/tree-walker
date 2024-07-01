@@ -36,6 +36,6 @@ jobs:
             - name: Run PHP Code Sniffer
               run: vendor/bin/phpcs -p ./src
             - name: Run unit tests
-              run: vendor/bin/phpunit -v
+              run: vendor/bin/phpunit
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse --no-progress -c phpstan.neon
