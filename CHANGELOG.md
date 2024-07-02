@@ -2,6 +2,22 @@
 
 All notable changes to Tree-Walker will be documented in this file.
 
+## [1.5.0](https://github.com/rezozero/tree-walker/compare/1.4.1...1.5.0) - 2024-07-02
+
+### ⚠ Breaking changes
+
+- Set minimum PHP version to 8.1. Renamed `parent` serialization group to `walker_parent`.
+
+### Features
+
+-  [**breaking**]Set minimum PHP version to 8.1. Renamed `parent` serialization group to `walker_parent`. - ([b9daece](https://github.com/rezozero/tree-walker/commit/b9daecee4e2535508213a3377596e6d6fbb1d25a))
+- Require php 8.1 minimum - ([2a3cfca](https://github.com/rezozero/tree-walker/commit/2a3cfca6d895ba85a2c91968805cbe7619b2a4cc))
+
+### Testing
+
+- Missing phpunit.xml - ([3cfcdd2](https://github.com/rezozero/tree-walker/commit/3cfcdd2a806bf2b772b10cb61b25d6d9739bb4eb))
+- Added basic test for `getChildren` and Symfony Serialization - ([a4a74e9](https://github.com/rezozero/tree-walker/commit/a4a74e9871f8bb51e3b3dd8e1bda019dfa6e2628))
+
 ## [1.4.1](https://github.com/rezozero/tree-walker/compare/1.4.0...1.4.1) - 2024-07-01
 
 ### Bug Fixes
