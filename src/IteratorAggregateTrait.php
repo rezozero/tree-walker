@@ -9,9 +9,6 @@ use Psr\Cache\InvalidArgumentException;
 
 trait IteratorAggregateTrait
 {
-    /**
-     * @return Collection
-     */
     abstract public function getChildren(): Collection;
 
     abstract public function count(): int;

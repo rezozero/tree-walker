@@ -8,11 +8,8 @@ use RZ\TreeWalker\WalkerContextInterface;
 
 trait ContextualDefinitionTrait
 {
-    private WalkerContextInterface $context;
-
-    public function __construct(WalkerContextInterface $context)
+    public function __construct(private readonly WalkerContextInterface $context)
     {
-        $this->context = $context;
     }
 
     protected function getContext(): WalkerContextInterface

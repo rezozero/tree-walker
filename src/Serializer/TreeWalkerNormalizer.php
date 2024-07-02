@@ -13,17 +13,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
-    /**
-     * @var DenormalizerInterface&NormalizerInterface
-     */
-    private $decorated;
-
-    public function __construct(NormalizerInterface $decorated)
+    public function __construct(private readonly DenormalizerInterface&NormalizerInterface $decorated)
     {
-        if (!$decorated instanceof DenormalizerInterface) {
-            throw new \InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
-        }
-        $this->decorated = $decorated;
     }
 
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
@@ -35,11 +26,23 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
             $serialized = [
                 '@type' => end($type),
                 'item' => $this->decorated->normalize($object->getItem(), $format, $context),
-                'children' => $object->getChildren()->map(function (mixed $walker) use ($format, $context) {
-                    return $this->normalize($walker, $format, $context);
-                })->getValues(),
             ];
 
+            if (
+                \in_array('children', $serializationGroups, true) &&
+                \in_array('walker_parent', $serializationGroups, true)
+            ) {
+                throw new \LogicException('You cannot use both "children" and "walker_parent" serialization groups at the same time.');
+            }
+
+            if (\in_array('children', $serializationGroups, true)) {
+                $serialized['children'] = $object->getChildren()->map(function (mixed $walker) use ($format, $context) {
+                    return $this->normalize($walker, $format, $context);
+                })->getValues();
+            }
+            if (\in_array('walker_parent', $serializationGroups, true)) {
+                $serialized['parent'] = $object->getParent();
+            }
             if (\in_array('walker_level', $serializationGroups, true)) {
                 $serialized['level'] = $object->getLevel();
             }
@@ -48,9 +51,6 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
             }
             if (\in_array('walker_metadata', $serializationGroups, true)) {
                 $serialized['metadata'] = $object->getMetadata();
-            }
-            if (\in_array('walker_level', $serializationGroups, true)) {
-                $serialized['level'] = $object->getLevel();
             }
             return $serialized;
         }

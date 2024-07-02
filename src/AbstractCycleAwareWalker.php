@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation as SymfonySerializer;
 
 abstract class AbstractCycleAwareWalker extends AbstractWalker
 {
-    public const MAX_CALL = 3;
+    public const MAX_CALL = 99;
 
     #[
         Serializer\Exclude,
@@ -24,7 +24,6 @@ abstract class AbstractCycleAwareWalker extends AbstractWalker
      * infinite loop.
      *
      * @inheritDoc
-     * @throws \ReflectionException
      */
     public function getChildren(): Collection
     {

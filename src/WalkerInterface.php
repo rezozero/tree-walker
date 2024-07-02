@@ -48,8 +48,8 @@ interface WalkerInterface extends \Countable, \ArrayAccess
     public function isRoot(): bool;
 
     /**
-     * @return Collection<static>
-     * @psalm-return Collection<static>
+     * @return Collection<int, static>
+     * @psalm-return Collection<int, static>
      */
     public function getChildren(): Collection;
 

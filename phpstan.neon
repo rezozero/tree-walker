@@ -2,14 +2,7 @@ parameters:
     level: max
     paths:
         - ./src
-    excludePaths:
-        - */node_modules/*
-        - */bower_components/*
-        - */static/*
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
-        - '#Doctrine\\Persistence\\ObjectRepository#'
-        - '#should return RZ\\TreeWalker\\WalkerInterface\|null but returns mixed#'
-        - '#Closure\(RZ\\TreeWalker\\WalkerInterface\): array\|ArrayObject\|bool\|float\|int\|string\|null given#'
     reportUnmatchedIgnoredErrors: false
