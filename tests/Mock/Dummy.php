@@ -10,7 +10,7 @@ class Dummy
 {
     public function __construct(
         #[Groups(['dummy'])]
-        public string $name
+        public string $name,
     ) {
     }
 

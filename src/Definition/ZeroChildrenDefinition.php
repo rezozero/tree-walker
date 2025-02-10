@@ -6,8 +6,6 @@ namespace RZ\TreeWalker\Definition;
 
 /**
  * A definition class must be invokable.
- *
- * @package RZ\TreeWalker\Definition
  */
 final class ZeroChildrenDefinition
 {

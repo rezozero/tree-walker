@@ -6,18 +6,13 @@ namespace RZ\TreeWalker;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation as Serializer;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
-use RuntimeException;
 use RZ\TreeWalker\Definition\StoppableDefinition;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Serializer\Annotation as SymfonySerializer;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Serializer\Annotation as Serializer;
 
-/**
- * @package RZ\TreeWalker
- */
 abstract class AbstractWalker implements WalkerInterface
 {
     use IteratorAggregateTrait;
@@ -25,76 +20,51 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @var static
      */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     private WalkerInterface $root;
 
     /**
      * @var Collection<static>|null
      */
-    #[
-        Serializer\Groups(["children"]),
-        SymfonySerializer\Groups(["children"]),
-        Serializer\Accessor(getter: "getChildren"),
-        Serializer\AccessType(type: "public_method")
-    ]
+    #[Serializer\Groups(['children'])]
     private ?Collection $children = null;
 
+    /**
+     * @var int<0,max>|null
+     */
     #[
-        Serializer\Groups(["children_count"]),
-        SymfonySerializer\Groups(["children_count"]),
-        Serializer\Accessor(getter: "count"),
-        Serializer\AccessType(type: "public_method"),
-        Serializer\SerializedName("childrenCount"),
-        SymfonySerializer\SerializedName(serializedName: "childrenCount")
+        Serializer\Groups(['children_count']),
+        Serializer\SerializedName(serializedName: 'childrenCount')
     ]
     private ?int $count = null;
 
-    #[
-        Serializer\Groups(["walker_metadata"]),
-        SymfonySerializer\Groups(["walker_metadata"]),
-    ]
+    #[Serializer\Groups(['walker_metadata'])]
     private ?array $metadata = null;
 
     /**
-     * @param static|null $root
-     * @param static|null $parent
-     * @param array $definitions
-     * @param array $countDefinitions
-     * @param object|null $item
-     * @param WalkerContextInterface $context
-     * @param CacheItemPoolInterface $cacheProvider
-     * @param int|float $level
-     * @param int|float $maxLevel
+     * @param static|null     $root
+     * @param static|null     $parent
+     * @param array<callable> $definitions
+     * @param array<callable> $countDefinitions
      */
     final protected function __construct(
         ?WalkerInterface $root,
-        #[Serializer\Groups(["walker_parent"])]
-        #[SymfonySerializer\Groups(["walker_parent"])]
+        #[Serializer\Groups(['walker_parent'])]
         private readonly ?WalkerInterface $parent,
-        #[Serializer\Exclude]
-        #[SymfonySerializer\Ignore]
+        #[Serializer\Ignore]
         private array &$definitions,
-        #[Serializer\Exclude]
-        #[SymfonySerializer\Ignore]
+        #[Serializer\Ignore]
         private array &$countDefinitions,
-        #[Serializer\Groups(["walker"])]
-        #[SymfonySerializer\Groups(["walker"])]
+        #[Serializer\Groups(['walker'])]
         private readonly ?object $item,
-        #[Serializer\Exclude]
-        #[SymfonySerializer\Ignore]
+        #[Serializer\Ignore]
         private readonly WalkerContextInterface $context,
-        #[Serializer\Exclude]
-        #[SymfonySerializer\Ignore]
+        #[Serializer\Ignore]
         private readonly CacheItemPoolInterface $cacheProvider,
-        #[Serializer\Groups(["walker_level"])]
-        #[SymfonySerializer\Groups(["walker_level"])]
+        #[Serializer\Groups(['walker_level'])]
         private readonly int|float $level = 0,
-        #[Serializer\Groups(["walker_level"])]
-        #[SymfonySerializer\Groups(["walker_level"])]
-        private readonly int|float $maxLevel = \INF
+        #[Serializer\Groups(['walker_level'])]
+        private readonly int|float $maxLevel = \INF,
     ) {
         if (null === $root) {
             $this->root = $this;
@@ -106,19 +76,11 @@ abstract class AbstractWalker implements WalkerInterface
 
     abstract protected function initializeDefinitions(): void;
 
-    /**
-     * @param object|null                 $item
-     * @param WalkerContextInterface|null $context
-     * @param int|float                   $maxLevel
-     * @param CacheItemPoolInterface|null $cacheProvider
-     *
-     * @return static
-     */
     public static function build(
         ?object $item,
         ?WalkerContextInterface $context = null,
         int|float $maxLevel = \INF,
-        ?CacheItemPoolInterface $cacheProvider = null
+        ?CacheItemPoolInterface $cacheProvider = null,
     ): static {
         $definitions = [];
         $countDefinitions = [];
@@ -137,7 +99,6 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function getWalkerAtItem(?object $item): ?static
@@ -147,8 +108,7 @@ abstract class AbstractWalker implements WalkerInterface
 
     /**
      * @param static $current
-     * @param object|null $item
-     * @return static|null
+     *
      * @throws InvalidArgumentException
      */
     private function doRecursiveFindWalkerForItem(WalkerInterface $current, ?object &$item): ?static
@@ -166,32 +126,21 @@ abstract class AbstractWalker implements WalkerInterface
         return null;
     }
 
-    /**
-     * @param object|null $item
-     * @return bool
-     */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     public function isItemEqualsTo(?object $item): bool
     {
-        return null !== $item && null !== $this->getItem() &&
-            \get_class($this->getItem()) === \get_class($item) &&
-            $this->getItem() === $item;
+        return null !== $item && null !== $this->getItem()
+            && \get_class($this->getItem()) === \get_class($item)
+            && $this->getItem() === $item;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItem(): ?object
     {
         return $this->item;
     }
 
     /**
-     * @inheritDoc
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @throws InvalidArgumentException
      */
     public function getChildren(): Collection
@@ -214,6 +163,7 @@ abstract class AbstractWalker implements WalkerInterface
 
         try {
             $callable = $this->getDefinitionForItem($this->item);
+            /** @var ArrayCollection<int, object> $collection */
             $collection = (new ArrayCollection($callable($this->item, $this)))->filter(function ($item) {
                 return null !== $item;
             });
@@ -251,15 +201,13 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @inheritDoc
+     * @return callable(object|null, WalkerInterface=): array<object|null>
+     *
      * @throws InvalidArgumentException
      * @throws WalkerDefinitionNotFound
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     public function getDefinitionForItem(?object $item): callable
     {
         if (null === $item) {
@@ -274,19 +222,16 @@ abstract class AbstractWalker implements WalkerInterface
             }
         }
 
-        throw new WalkerDefinitionNotFound('No definition was found for ' . get_class($item));
+        throw new WalkerDefinitionNotFound('No definition was found for '.get_class($item));
     }
 
     /**
-     * @param object|null $item
      * @return string[]
+     *
      * @throws InvalidArgumentException
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     protected function getItemClassesList(?object $item): array
     {
         if (null === $item) {
@@ -296,7 +241,7 @@ abstract class AbstractWalker implements WalkerInterface
         $itemId = \str_replace(
             ['{', '}', '(', ')', '/', '\\', '@', ':', '"'],
             '-',
-            static::class . '_' . \get_class($item)
+            static::class.'_'.\get_class($item)
         );
         $cacheItem = $this->getCacheProvider()->getItem($itemId);
 
@@ -313,46 +258,39 @@ abstract class AbstractWalker implements WalkerInterface
             $cacheItem->set($classList);
 
             $this->getCacheProvider()->save($cacheItem);
+
             return $classList;
         }
 
+        /** @var string[]|null $classList */
         $classList = $cacheItem->get();
         if (!is_array($classList)) {
-            throw new RuntimeException('Item class list should be an array of string');
+            throw new \RuntimeException('Item class list should be an array of string');
         }
+
         return $classList;
     }
 
-    /**
-     * @return CacheItemPoolInterface
-     */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     protected function getCacheProvider(): CacheItemPoolInterface
     {
         return $this->cacheProvider;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getRoot(): static
     {
         return $this->root;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isRoot(): bool
     {
         return $this === $this->getRoot();
     }
 
     /**
-     * @inheritDoc
+     * @param class-string $classname
+     *
+     * @return WalkerInterface[]
      */
     public function getWalkersOfType(string $classname): array
     {
@@ -360,9 +298,9 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @param WalkerInterface $current
-     * @param string $classname
-     * @return array
+     * @param class-string $classname
+     *
+     * @return WalkerInterface[]
      */
     private function doRecursiveFindWalkersOfType(WalkerInterface $current, string $classname): array
     {
@@ -377,9 +315,6 @@ abstract class AbstractWalker implements WalkerInterface
         return $foundItems;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addDefinition(string $classname, callable $definition): static
     {
         $this->definitions[$classname] = $definition;
@@ -387,9 +322,6 @@ abstract class AbstractWalker implements WalkerInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addCountDefinition(string $classname, callable $countDefinition): static
     {
         $this->countDefinitions[$classname] = $countDefinition;
@@ -398,9 +330,8 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @inheritDoc
      * @param int $offset
-     * @return bool
+     *
      * @throws InvalidArgumentException
      */
     public function offsetExists(mixed $offset): bool
@@ -409,9 +340,8 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @inheritDoc
      * @param int $offset
-     * @return mixed
+     *
      * @throws InvalidArgumentException
      */
     #[\ReturnTypeWillChange]
@@ -421,32 +351,28 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @inheritDoc
-     * @param mixed $offset
-     * @param mixed $value
-     * @throws RuntimeException
-     * @deprecated WalkerInterface has read-only children.
+     * @throws \RuntimeException
+     *
+     * @deprecated walkerInterface has read-only children
      */
     #[\ReturnTypeWillChange]
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new RuntimeException('WalkerInterface has read-only children.');
+        throw new \RuntimeException('WalkerInterface has read-only children.');
     }
 
     /**
-     * @inheritDoc
-     * @param mixed $offset
-     * @throws RuntimeException
-     * @deprecated WalkerInterface has read-only children.
+     * @throws \RuntimeException
+     *
+     * @deprecated walkerInterface has read-only children
      */
     #[\ReturnTypeWillChange]
     public function offsetUnset(mixed $offset): void
     {
-        throw new RuntimeException('WalkerInterface has read-only children.');
+        throw new \RuntimeException('WalkerInterface has read-only children.');
     }
 
     /**
-     * @inheritDoc
      * @throws InvalidArgumentException
      * @throws \ReflectionException
      */
@@ -471,7 +397,8 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @inheritDoc
+     * @return callable(object|null): int<0,max>|null
+     *
      * @throws InvalidArgumentException
      */
     public function getCountDefinitionForItem(?object $item): ?callable
@@ -488,7 +415,6 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @return int|null
      * @throws InvalidArgumentException
      */
     public function getIndex(): ?int
@@ -506,22 +432,15 @@ abstract class AbstractWalker implements WalkerInterface
         return null;
     }
 
-    /**
-     * @return static|null
-     */
     public function getParent(): ?static
     {
         return $this->parent;
     }
 
     /**
-     * @return static|null
      * @throws InvalidArgumentException
      */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     public function getNext(): ?static
     {
         if (null === $this->getParent()) {
@@ -529,7 +448,7 @@ abstract class AbstractWalker implements WalkerInterface
         }
 
         /**
-         * @var int $key
+         * @var int    $key
          * @var static $sibling
          */
         foreach ($this->getParent()->getChildren() as $key => $sibling) {
@@ -542,13 +461,9 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
-     * @return static|null
      * @throws InvalidArgumentException
      */
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     public function getPrevious(): ?static
     {
         if (null === $this->getParent()) {
@@ -556,7 +471,7 @@ abstract class AbstractWalker implements WalkerInterface
         }
 
         /**
-         * @var int $key
+         * @var int    $key
          * @var static $sibling
          */
         foreach ($this->getParent()->getChildren() as $key => $sibling) {
@@ -568,17 +483,13 @@ abstract class AbstractWalker implements WalkerInterface
         return null;
     }
 
-    #[
-        Serializer\Exclude,
-        SymfonySerializer\Ignore
-    ]
+    #[Serializer\Ignore]
     public function getContext(): WalkerContextInterface
     {
         return $this->context;
     }
 
     /**
-     * @return int|float
      * @deprecated Use getLevel
      */
     public function getCurrentLevel(): int|float
@@ -586,39 +497,27 @@ abstract class AbstractWalker implements WalkerInterface
         return $this->getLevel();
     }
 
-    /**
-     * @return int|float
-     */
     public function getLevel(): int|float
     {
         return $this->level;
     }
 
-    /**
-     * @return float|int
-     */
     public function getMaxLevel(): int|float
     {
         return $this->maxLevel;
     }
 
-    /**
-     * @param string $key
-     * @param mixed $data
-     * @return static
-     */
     public function addMetadata(string $key, mixed $data): static
     {
         if (null === $this->metadata) {
             $this->metadata = [];
         }
         $this->metadata[$key] = $data;
+
         return $this;
     }
 
     /**
-     * @param string|null $key
-     * @param mixed|null $default
      * @return mixed|array
      */
     public function getMetadata(?string $key = null, mixed $default = null): mixed
@@ -629,6 +528,7 @@ abstract class AbstractWalker implements WalkerInterface
         if (null !== $this->metadata && \array_key_exists($key, $this->metadata)) {
             return $this->metadata[$key];
         }
+
         return $default;
     }
 }

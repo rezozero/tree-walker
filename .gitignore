@@ -106,3 +106,4 @@ modules.xml
 # End of https://www.gitignore.io/api/composer,phpstorm+all
 
 coverage
+/.php-cs-fixer.cache

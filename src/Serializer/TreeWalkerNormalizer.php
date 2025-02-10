@@ -29,8 +29,8 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
             ];
 
             if (
-                \in_array('children', $serializationGroups, true) &&
-                \in_array('walker_parent', $serializationGroups, true)
+                \in_array('children', $serializationGroups, true)
+                && \in_array('walker_parent', $serializationGroups, true)
             ) {
                 throw new \LogicException('You cannot use both "children" and "walker_parent" serialization groups at the same time.');
             }
@@ -52,8 +52,10 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
             if (\in_array('walker_metadata', $serializationGroups, true)) {
                 $serialized['metadata'] = $object->getMetadata();
             }
+
             return $serialized;
         }
+
         return $this->decorated->normalize($object, $format, $context);
     }
 
@@ -70,11 +72,8 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
     }
 
     /**
-     * @param mixed $data
      * @param class-string $type
-     * @param string|null $format
-     * @param array $context
-     * @return mixed
+     *
      * @throws ExceptionInterface
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed

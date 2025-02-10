@@ -40,7 +40,7 @@ class DummyTest extends SerializerTestCase
         );
 
         $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . '/fixtures/dummy-walker.json',
+            __DIR__.'/fixtures/dummy-walker.json',
             $this->getSerializer()->serialize($walker, 'json', ['groups' => ['children', 'walker', 'dummy']])
         );
     }

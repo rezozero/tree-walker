@@ -15,6 +15,7 @@ trait IteratorAggregateTrait
 
     /**
      * @return array|\ArrayIterator|\Traversable
+     *
      * @throws InvalidArgumentException
      * @throws \ReflectionException
      */

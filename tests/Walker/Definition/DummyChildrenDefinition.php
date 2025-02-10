@@ -15,9 +15,9 @@ class DummyChildrenDefinition
     public function __invoke(Dummy $dummy, WalkerInterface $walker): array
     {
         return [
-            new Dummy($dummy->name . ' - child 1'),
-            new Dummy($dummy->name . ' - child 2'),
-            new Dummy($dummy->name . ' - child 3'),
+            new Dummy($dummy->name.' - child 1'),
+            new Dummy($dummy->name.' - child 2'),
+            new Dummy($dummy->name.' - child 3'),
         ];
     }
 }

@@ -6,3 +6,4 @@ parameters:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
