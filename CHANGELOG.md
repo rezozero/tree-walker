@@ -2,6 +2,16 @@
 
 All notable changes to Tree-Walker will be documented in this file.
 
+## [1.6.0](https://github.com/rezozero/tree-walker/compare/1.5.0...1.6.0) - 2025-02-10
+
+### ⚠ Breaking changes
+
+- Removed jms/serializer dependency and attributes.
+
+### Features
+
+-  [**breaking**]Removed jms/serializer dependency and attributes. - ([0a2863c](https://github.com/rezozero/tree-walker/commit/0a2863cd7bea65e51807b9a521e7e8f096f3ba0e))
+
 ## [1.5.0](https://github.com/rezozero/tree-walker/compare/1.4.1...1.5.0) - 2024-07-02
 
 ### ⚠ Breaking changes
