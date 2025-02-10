@@ -216,7 +216,7 @@ everyDummySayHello($walker);
 
 ## Serialization groups
 
-Any walker interface can be serialized with *jms/serializer* since they extends `AbstractWalker` class.
+Any walker interface can be serialized with *symfony/serializer* since they extends `AbstractWalker` class.
 You should add serialization groups to ensure you do not fall into an infinite loop:
 
 - `walker`: serializes flat members with no recursion
