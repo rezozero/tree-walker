@@ -20,7 +20,8 @@
         "phpstan/phpstan": "^2.1.4",
         "phpunit/phpunit": "^9.5",
         "symfony/property-access": ">=5.4",
-        "friendsofphp/php-cs-fixer": "^3.68"
+        "friendsofphp/php-cs-fixer": "^3.68",
+        "rector/rector": "^2.1"
     },
     "autoload": {
         "psr-4": {

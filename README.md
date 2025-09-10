@@ -12,6 +12,15 @@ But if you need it in you can add `\IteratorAggregate` to your custom Walker imp
 If your application may introduce cyclic references between objects, you can use `AbstractCycleAwareWalker` instead of `AbstractWalker` to keep track of collected items and prevent
 collecting same item children twice. Collision detection is based on `spl_object_id` method.
 
+## Table of Contents
+
+* [Usage in Twig](#usage-in-twig)
+    + [Walk forward](#walk-forward)
+    + [Walk backward](#walk-backward)
+* [Configure your Walker](#configure-your-walker)
+* [Serialization groups](#serialization-groups)
+* [Stoppable definition](#stoppable-definition)
+
 ## Usage in Twig
 
 - First, make sure your Walker instance implements `\IteratorAggregate` in order to use it directly into a loop

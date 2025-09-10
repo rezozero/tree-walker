@@ -20,9 +20,7 @@ class SerializerTestCase extends TestCase
         $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
 
         $contextBuilder = (new ObjectNormalizerContextBuilder())
-            ->withCircularReferenceHandler(function (WalkerInterface $object, string $format, array $context): string {
-                return (string) $object->getItem();
-            });
+            ->withCircularReferenceHandler(fn (WalkerInterface $object, string $format, array $context): string => (string) $object->getItem());
 
         return new Serializer([new ObjectNormalizer(classMetadataFactory: $classMetadataFactory, defaultContext: $contextBuilder->toArray())], [new JsonEncoder()]);
     }

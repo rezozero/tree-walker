@@ -130,7 +130,7 @@ abstract class AbstractWalker implements WalkerInterface
     public function isItemEqualsTo(?object $item): bool
     {
         return null !== $item && null !== $this->getItem()
-            && \get_class($this->getItem()) === \get_class($item)
+            && $this->getItem()::class === $item::class
             && $this->getItem() === $item;
     }
 
@@ -164,9 +164,7 @@ abstract class AbstractWalker implements WalkerInterface
         try {
             $callable = $this->getDefinitionForItem($this->item);
             /** @var ArrayCollection<int, object> $collection */
-            $collection = (new ArrayCollection($callable($this->item, $this)))->filter(function ($item) {
-                return null !== $item;
-            });
+            $collection = (new ArrayCollection($callable($this->item, $this)))->filter(fn ($item) => null !== $item);
 
             $maxLevel = $this->maxLevel;
 
@@ -182,20 +180,18 @@ abstract class AbstractWalker implements WalkerInterface
              * Call invokable definition with current item and current Walker
              * if you need to add metadata to your Walker after fetching its children.
              */
-            return $collection->map(function ($item) use ($maxLevel) {
-                return new static(
-                    $this->getRoot(),
-                    $this,
-                    $this->definitions,
-                    $this->countDefinitions,
-                    $item,
-                    $this->context,
-                    $this->cacheProvider,
-                    $this->level + 1,
-                    $maxLevel
-                );
-            });
-        } catch (WalkerDefinitionNotFound $e) {
+            return $collection->map(fn ($item) => new static(
+                $this->getRoot(),
+                $this,
+                $this->definitions,
+                $this->countDefinitions,
+                $item,
+                $this->context,
+                $this->cacheProvider,
+                $this->level + 1,
+                $maxLevel
+            ));
+        } catch (WalkerDefinitionNotFound) {
             return new ArrayCollection();
         }
     }
@@ -222,7 +218,7 @@ abstract class AbstractWalker implements WalkerInterface
             }
         }
 
-        throw new WalkerDefinitionNotFound('No definition was found for '.get_class($item));
+        throw new WalkerDefinitionNotFound('No definition was found for '.$item::class);
     }
 
     /**
@@ -241,7 +237,7 @@ abstract class AbstractWalker implements WalkerInterface
         $itemId = \str_replace(
             ['{', '}', '(', ')', '/', '\\', '@', ':', '"'],
             '-',
-            static::class.'_'.\get_class($item)
+            static::class.'_'.$item::class
         );
         $cacheItem = $this->getCacheProvider()->getItem($itemId);
 
@@ -406,7 +402,7 @@ abstract class AbstractWalker implements WalkerInterface
         $classList = $this->getItemClassesList($item);
 
         foreach ($classList as $className) {
-            if (key_exists($className, $this->countDefinitions)) {
+            if (array_key_exists($className, $this->countDefinitions)) {
                 return $this->countDefinitions[$className];
             }
         }

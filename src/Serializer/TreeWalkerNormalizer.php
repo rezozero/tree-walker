@@ -20,7 +20,7 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         if ($object instanceof WalkerInterface) {
-            $type = explode('\\', get_class($object));
+            $type = explode('\\', $object::class);
             /** @var array<string> $serializationGroups */
             $serializationGroups = isset($context['groups']) && is_array($context['groups']) ? $context['groups'] : [];
             $serialized = [
@@ -36,9 +36,7 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
             }
 
             if (\in_array('children', $serializationGroups, true)) {
-                $serialized['children'] = $object->getChildren()->map(function (mixed $walker) use ($format, $context) {
-                    return $this->normalize($walker, $format, $context);
-                })->getValues();
+                $serialized['children'] = $object->getChildren()->map(fn (mixed $walker) => $this->normalize($walker, $format, $context))->getValues();
             }
             if (\in_array('walker_parent', $serializationGroups, true)) {
                 $serialized['parent'] = $object->getParent();

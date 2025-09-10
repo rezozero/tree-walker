@@ -6,7 +6,7 @@ namespace RZ\TreeWalker\Tests\Mock;
 
 use Symfony\Component\Serializer\Attribute\Groups;
 
-class Dummy
+class Dummy implements \Stringable
 {
     public function __construct(
         #[Groups(['dummy'])]
