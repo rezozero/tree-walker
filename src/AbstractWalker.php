@@ -11,7 +11,7 @@ use Psr\Cache\InvalidArgumentException;
 use RZ\TreeWalker\Definition\StoppableDefinition;
 use RZ\TreeWalker\Exception\WalkerDefinitionNotFound;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 abstract class AbstractWalker implements WalkerInterface
 {
@@ -24,7 +24,7 @@ abstract class AbstractWalker implements WalkerInterface
     private WalkerInterface $root;
 
     /**
-     * @var Collection<static>|null
+     * @var Collection<int, static>|null
      */
     #[Serializer\Groups(['children'])]
     private ?Collection $children = null;
@@ -32,10 +32,8 @@ abstract class AbstractWalker implements WalkerInterface
     /**
      * @var int<0,max>|null
      */
-    #[
-        Serializer\Groups(['children_count']),
-        Serializer\SerializedName(serializedName: 'childrenCount')
-    ]
+    #[Serializer\Groups(['children_count'])]
+    #[Serializer\SerializedName(serializedName: 'childrenCount')]
     private ?int $count = null;
 
     #[Serializer\Groups(['walker_metadata'])]
@@ -140,6 +138,10 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
+     * @return Collection<int, static>
+     *
+     * @psalm-return Collection<int, static>
+     *
      * @throws \RuntimeException
      * @throws InvalidArgumentException
      */
@@ -153,6 +155,10 @@ abstract class AbstractWalker implements WalkerInterface
     }
 
     /**
+     * @return Collection<int, static>
+     *
+     * @psalm-return Collection<int, static>
+     *
      * @throws InvalidArgumentException
      */
     private function doGetChildren(): Collection

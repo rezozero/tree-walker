@@ -11,9 +11,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
+final readonly class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
-    public function __construct(private readonly DenormalizerInterface&NormalizerInterface $decorated)
+    public function __construct(private DenormalizerInterface&NormalizerInterface $decorated)
     {
     }
 
@@ -59,14 +59,12 @@ final class TreeWalkerNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        // Symfony 5.4 BC
-        return $this->decorated->supportsNormalization($data, $format);
+        return $this->decorated->supportsNormalization($data, $format, $context);
     }
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        // Symfony 5.4 BC
-        return $this->decorated->supportsDenormalization($data, $type, $format);
+        return $this->decorated->supportsDenormalization($data, $type, $format, $context);
     }
 
     /**
