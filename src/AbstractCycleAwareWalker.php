@@ -6,7 +6,7 @@ namespace RZ\TreeWalker;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 abstract class AbstractCycleAwareWalker extends AbstractWalker
 {
@@ -23,15 +23,19 @@ abstract class AbstractCycleAwareWalker extends AbstractWalker
      * infinite loop.
      *
      * {@inheritDoc}
+     *
+     * @return Collection<int, static>
+     *
+     * @psalm-return Collection<int, static>
      */
     public function getChildren(): Collection
     {
         $root = $this->getRoot();
         if ($root->registerItem($this->getItem())) {
             return parent::getChildren();
-        } else {
-            return new ArrayCollection();
         }
+
+        return new ArrayCollection();
     }
 
     /**
